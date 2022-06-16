@@ -1,4 +1,4 @@
-package com.pixelsense.pixelsense.service;
+package com.pixelsense.userservice.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.pixelsense.pixelsense.model.PixelSenseUser;
-import com.pixelsense.pixelsense.repository.UserRepository;
+import com.pixelsense.userservice.doa.UserRepository;
+import com.pixelsense.userservice.model.PixelSenseUser;
 
 @Service
 public class UserServiceImpl implements UserService {

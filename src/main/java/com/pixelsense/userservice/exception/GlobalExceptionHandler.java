@@ -1,4 +1,4 @@
-package com.pixelsense.pixelsense.exception;
+package com.pixelsense.userservice.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

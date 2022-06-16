@@ -1,4 +1,4 @@
-package com.pixelsense.pixelsense.model;
+package com.pixelsense.userservice.model;
 
 import java.io.Serializable;
 import java.util.Date;

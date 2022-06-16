@@ -1,4 +1,4 @@
-package com.pixelsense.pixelsense.exception;
+package com.pixelsense.userservice.exception;
 import java.io.Serializable;
 
 public class UserSearchEmptyResult extends RuntimeException implements Serializable {

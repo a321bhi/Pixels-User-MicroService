@@ -1,9 +1,9 @@
-package com.pixelsense.pixelsense.service;
+package com.pixelsense.userservice.service;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.pixelsense.pixelsense.model.PixelSenseUser;
+import com.pixelsense.userservice.model.PixelSenseUser;
 
 
 public interface UserService {

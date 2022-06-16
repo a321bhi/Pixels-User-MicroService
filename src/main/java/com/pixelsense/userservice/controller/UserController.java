@@ -1,4 +1,4 @@
-package com.pixelsense.pixelsense.controller;
+package com.pixelsense.userservice.controller;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pixelsense.pixelsense.exception.IncorrectPasswordException;
-import com.pixelsense.pixelsense.exception.UserNameNotFoundException;
-import com.pixelsense.pixelsense.exception.UserSearchEmptyResult;
-import com.pixelsense.pixelsense.model.PixelSenseUser;
-import com.pixelsense.pixelsense.service.UserServiceImpl;
+import com.pixelsense.userservice.exception.IncorrectPasswordException;
+import com.pixelsense.userservice.exception.UserNameNotFoundException;
+import com.pixelsense.userservice.exception.UserSearchEmptyResult;
+import com.pixelsense.userservice.model.PixelSenseUser;
+import com.pixelsense.userservice.service.UserServiceImpl;
 
 @RestController
 @RequestMapping("/user")

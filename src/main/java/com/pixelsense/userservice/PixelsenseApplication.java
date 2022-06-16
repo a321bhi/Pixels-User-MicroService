@@ -1,4 +1,4 @@
-package com.pixelsense.pixelsense;
+package com.pixelsense.userservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
