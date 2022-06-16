@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> userSearchEmptyResultHandler() {
 		return new ResponseEntity<String>("No users found..", HttpStatus.NOT_FOUND);
 	}
-	@ExceptionHandler(value = { UserSearchEmptyResult.class })
+	@ExceptionHandler(value = { IncorrectPasswordException.class })
 	public ResponseEntity<String> incorrectPasswordExceptionHandler() {
 		return new ResponseEntity<String>("Incorrect password..", HttpStatus.FORBIDDEN);
 	}
