@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,16 +47,16 @@ public class UserController {
 		}
 		return true;
 	}
-	
+
 	@GetMapping("/login")
 	public PixelSenseUser login(@RequestBody String username, String password) {
 		Optional<PixelSenseUser> opt = userService.findUser(username);
 		if (!opt.isPresent()) {
 			throw new UserNameNotFoundException();
 		}
-		if(opt.get().getPassword().equals(password)){
+		if (opt.get().getPassword().equals(password)) {
 			return opt.get();
-		}else {
+		} else {
 			throw new IncorrectPasswordException();
 		}
 	}
@@ -77,7 +77,8 @@ public class UserController {
 		// Encoding Password
 //		Pbkdf2PasswordEncoder pbkdf2PasswordEncoder = new Pbkdf2PasswordEncoder();
 //		user.setPassword(pbkdf2PasswordEncoder.encode(user.getPassword()));
-
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		// Extracting First/Middle/Last names
 		String[] arrayOfName = user.getFullName().split(" ", 0);
 		int numPartOfName = arrayOfName.length;
@@ -95,7 +96,7 @@ public class UserController {
 		} else {
 			user.setLastName(arrayOfName[numPartOfName - 1]);
 		}
-
+		
 		// Saving to database
 		userService.addUser(user);
 		return new ResponseEntity<String>(user.getFirstName() + " data has been added", HttpStatus.OK);

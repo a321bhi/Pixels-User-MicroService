@@ -14,7 +14,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Override
 	public void addUser(PixelSenseUser user) {
 		userRepository.save(user);
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<PixelSenseUser> findAllUsers() {
-		return (List<PixelSenseUser>)userRepository.findAll();
+		return (List<PixelSenseUser>) userRepository.findAll();
 	}
 
 	@Override

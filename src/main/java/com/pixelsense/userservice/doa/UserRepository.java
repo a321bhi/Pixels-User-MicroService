@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.pixelsense.userservice.model.PixelSenseUser;
 
 @Repository
-public interface UserRepository extends CrudRepository<PixelSenseUser, String>{
+public interface UserRepository extends CrudRepository<PixelSenseUser, String> {
 
 }
