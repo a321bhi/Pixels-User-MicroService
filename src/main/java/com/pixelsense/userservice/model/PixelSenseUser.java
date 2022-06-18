@@ -28,6 +28,11 @@ public class PixelSenseUser implements Serializable {
 	String profilePicId;
 	String password;
 
+	public PixelSenseUser(String userName, String password) {
+		super();
+		this.userName = userName;
+		this.password = password;
+	}
 	public String getPassword() {
 	return password;
 }

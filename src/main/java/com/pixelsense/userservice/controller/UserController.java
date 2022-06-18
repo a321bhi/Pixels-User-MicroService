@@ -39,7 +39,7 @@ public class UserController {
 		}
 	}
 
-	@GetMapping("/{username}")
+	@GetMapping("/check/{username}")
 	public Boolean userNameExistsCheck(@PathVariable String username) {
 		Optional<PixelSenseUser> opt = userService.findUser(username);
 		if (!opt.isPresent()) {
@@ -48,13 +48,15 @@ public class UserController {
 		return true;
 	}
 
-	@GetMapping("/login")
-	public PixelSenseUser login(@RequestBody String username, String password) {
-		Optional<PixelSenseUser> opt = userService.findUser(username);
+	@PostMapping("/login")
+	public PixelSenseUser login(@RequestBody PixelSenseUser user) {
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		Optional<PixelSenseUser> opt = userService.findUser(user.getUserName());
 		if (!opt.isPresent()) {
 			throw new UserNameNotFoundException();
 		}
-		if (opt.get().getPassword().equals(password)) {
+		//if (opt.get().getPassword().equals(user.getPassword())) {
+		if (bCryptPasswordEncoder.matches(user.getPassword(),opt.get().getPassword())) {
 			return opt.get();
 		} else {
 			throw new IncorrectPasswordException();
