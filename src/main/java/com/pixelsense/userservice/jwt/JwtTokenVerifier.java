@@ -67,13 +67,7 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
 
 //			Set<SimpleGrantedAuthority> simpleGrantedAuthorities = authorities.stream()
 //					.map(m -> new SimpleGrantedAuthority(m.get("authority"))).collect(Collectors.toSet());
-//	
-//			
-//			
-//			Authentication authentication =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, null,
-//					//simpleGrantedAuthorities));
-//					Collections.singleton(new SimpleGrantedAuthority("USER"))));
-//			UserDetails userDetails=customUserDetailsService.loadUserByUsername(username);
+//		
 			Authentication authentication = new UsernamePasswordAuthenticationToken(
 					username, null,Collections.singleton(new SimpleGrantedAuthority("USER")));
 			SecurityContextHolder.getContext().setAuthentication(authentication);
