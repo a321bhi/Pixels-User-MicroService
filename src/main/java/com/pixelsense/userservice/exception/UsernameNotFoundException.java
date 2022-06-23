@@ -2,18 +2,18 @@ package com.pixelsense.userservice.exception;
 
 import java.io.Serializable;
 
-public class UserNameNotFoundException  extends RuntimeException implements Serializable {
+public class UsernameNotFoundException  extends RuntimeException implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public UserNameNotFoundException() {
+	public UsernameNotFoundException() {
 		super();
 	}
 
-	public UserNameNotFoundException(String message) {
+	public UsernameNotFoundException(String message) {
 		super(message);
 	}
 

@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<String>("Username already exists..", HttpStatus.CONFLICT);
 	}
 
-	@ExceptionHandler(value = { UserNameNotFoundException.class })
+	@ExceptionHandler(value = { UsernameNotFoundException.class })
 	public ResponseEntity<String> userNameNotFoundExceptionHandler() {
 		return new ResponseEntity<String>("User not found or does not exist..", HttpStatus.NOT_FOUND);
 	}
