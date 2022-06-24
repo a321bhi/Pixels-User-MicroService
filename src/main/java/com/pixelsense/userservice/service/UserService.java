@@ -15,6 +15,5 @@ public interface UserService {
 	public void deleteUser(String userName);
 
 	public void updateUser(String userName, PixelSenseUser user);
-	
 
 }

@@ -17,14 +17,14 @@ public class MediaComment {
 	private String commentId;
 
 	private String commentContent;
-	
+
 	private Date createdAt = new Date();
 	@ManyToOne
-	@JoinColumn(name="userId")
+	@JoinColumn(name = "userId")
 	private PixelSenseUser commentByUser;
 
 	@ManyToOne
-	@JoinColumn(name="mediaId")
+	@JoinColumn(name = "mediaId")
 	private Media commentOnMediaId;
 
 	public MediaComment() {
@@ -100,6 +100,5 @@ public class MediaComment {
 	public void setCommentOnMediaId(Media commentOnMediaId) {
 		this.commentOnMediaId = commentOnMediaId;
 	}
-
 
 }

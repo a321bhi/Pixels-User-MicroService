@@ -53,17 +53,14 @@ public class PixelSenseUser implements Serializable {
 	private List<PixelSenseUser> follower = new ArrayList<>();
 
 	@ManyToMany
-	@JoinTable(name = "followers", 
-	joinColumns = @JoinColumn(name = "follows"), 
-	inverseJoinColumns = @JoinColumn(name = "userId")
-	)
+	@JoinTable(name = "followers", joinColumns = @JoinColumn(name = "follows"), inverseJoinColumns = @JoinColumn(name = "userId"))
 	private List<PixelSenseUser> following = new ArrayList<>();
 
-	/* End of declaration of variables and beginning of standard getters/setters, 
+	/*
+	 * End of declaration of variables and beginning of standard getters/setters,
 	 * constructors, equals, hashcode and toString method
-	 * */
-	
-	
+	 */
+
 	public String getUserName() {
 		return username;
 	}
@@ -255,7 +252,4 @@ public class PixelSenseUser implements Serializable {
 		this.following = following;
 	}
 
-	
-	
-	
 }

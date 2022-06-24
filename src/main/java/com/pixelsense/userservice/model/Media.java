@@ -27,8 +27,7 @@ public class Media {
 	private PixelSenseUser mediaPostedBy;
 
 	@ManyToMany
-	@JoinTable(name = "mediaLikedBy", joinColumns = @JoinColumn(name = "mediaID"), 
-	inverseJoinColumns = @JoinColumn(name = "userId"))
+	@JoinTable(name = "mediaLikedBy", joinColumns = @JoinColumn(name = "mediaID"), inverseJoinColumns = @JoinColumn(name = "userId"))
 	private List<PixelSenseUser> likedBy = new ArrayList<>();
 
 	@OneToMany(mappedBy = "commentOnMediaId")
@@ -109,6 +108,4 @@ public class Media {
 		this.mediaComments = mediaComments;
 	}
 
-	
-	
 }

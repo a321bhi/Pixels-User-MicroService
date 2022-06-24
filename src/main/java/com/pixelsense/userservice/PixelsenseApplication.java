@@ -16,18 +16,18 @@ public class PixelsenseApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PixelsenseApplication.class, args);
 	}
+
 	@PostConstruct
 	protected void init() {
-		
-		List<Authority> authorityList=new ArrayList<>();
-		authorityList.add(createAuthority("USER","User role"));
-		//authorityList.add(createAuthority("ADMIN","Admin role"));
-		
+
+		List<Authority> authorityList = new ArrayList<>();
+		authorityList.add(createAuthority("USER", "User role"));
+		// authorityList.add(createAuthority("ADMIN","Admin role"));
+
 	}
-	
-	
-	private Authority createAuthority(String roleCode,String roleDescription) {
-		Authority authority=new Authority();
+
+	private Authority createAuthority(String roleCode, String roleDescription) {
+		Authority authority = new Authority();
 		authority.setRoleCode(roleCode);
 		authority.setRoleDescription(roleDescription);
 		return authority;

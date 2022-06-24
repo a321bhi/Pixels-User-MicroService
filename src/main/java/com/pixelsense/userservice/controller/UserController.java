@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import javax.annotation.security.RolesAllowed;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,7 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +41,7 @@ public class UserController {
 
 	@Autowired
 	JwtConfig jwtConfig;
+
 	@GetMapping("/all")
 	public ArrayList<PixelSenseUser> getAllUsers() {
 		ArrayList<PixelSenseUser> searchResult = (ArrayList<PixelSenseUser>) userService.findAllUsers();
@@ -62,19 +60,18 @@ public class UserController {
 		}
 		return true;
 	}
+
 	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody PixelSenseUser user) {
-		final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-				user.getUserName(), user.getPassword()));
-		
+		final Authentication authentication = authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword()));
+
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String token = Jwts.builder().setSubject(user.getUserName())
-		.claim("authorities", "USER")
-		.setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
-		.signWith(jwtConfig.getSecretKeySigned())
-		.compact();
-	    HttpHeaders responseHeaders = new HttpHeaders();
-	    responseHeaders.set(jwtConfig.getAuthorizationheader(),"Bearer "+token);
+		String token = Jwts.builder().setSubject(user.getUserName()).claim("authorities", "USER")
+				.setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
+				.signWith(jwtConfig.getSecretKeySigned()).compact();
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set(jwtConfig.getAuthorizationheader(), "Bearer " + token);
 		return ResponseEntity.ok().headers(responseHeaders).body("Logged in");
 //		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 //		Optional<PixelSenseUser> opt = userService.findUser(user.getUserName());
@@ -89,22 +86,10 @@ public class UserController {
 //		}
 	}
 
-//
-//	@GetMapping("/{userName}")
-//	public PixelSenseUser getUserInfo(@PathVariable String userName) {
-//		Optional<PixelSenseUser> opt = userService.findUser(userName);
-//		if(!opt.isPresent()) {
-//			throw new UserNameNotFoundException();
-//		}
-//		return opt.get();
-//	}
-
 	// REST End point local
 	@PostMapping("/register")
 	public ResponseEntity<String> addUser(@RequestBody PixelSenseUser user) {
 		// Encoding Password
-//		Pbkdf2PasswordEncoder pbkdf2PasswordEncoder = new Pbkdf2PasswordEncoder();
-//		user.setPassword(pbkdf2PasswordEncoder.encode(user.getPassword()));
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		// Extracting First/Middle/Last names
@@ -141,6 +126,5 @@ public class UserController {
 		userService.updateUser(userName, updatedUser);
 		return new ResponseEntity<String>(updatedUser.getFirstName() + "'s data has been updated", HttpStatus.OK);
 	}
-	
 
 }

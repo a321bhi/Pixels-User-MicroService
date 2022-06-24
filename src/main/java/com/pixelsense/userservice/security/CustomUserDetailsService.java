@@ -14,16 +14,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Autowired
 	private UserRepository userRepository;
-	
-	
 
-	
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		
+
 		PixelSenseUser pixelSenseUser = (PixelSenseUser) userRepository.findForAuth(userName);
 		return new UserDetailsImplementation(pixelSenseUser);
 	}
-	
 
 }

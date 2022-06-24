@@ -13,12 +13,12 @@ public class HttpSessionConfig {
 
 	@Bean
 	public LettuceConnectionFactory connectionFactory() {
-		return new LettuceConnectionFactory(); 
+		return new LettuceConnectionFactory();
 	}
 
 	@Bean
 	public HttpSessionIdResolver httpSessionIdResolver() {
-		return HeaderHttpSessionIdResolver.xAuthToken(); 
+		return HeaderHttpSessionIdResolver.xAuthToken();
 	}
 
 }

@@ -1,7 +1,5 @@
 package com.pixelsense.userservice.security;
 
-import javax.crypto.SecretKey;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +12,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.pixelsense.userservice.jwt.JwtConfig;
 import com.pixelsense.userservice.jwt.JwtTokenVerifier;
@@ -31,31 +26,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
-	
+
 	@Autowired
 	private AuthenticationEntryPoint authenticationEntryPoint;
-	
+
 	@Autowired
 	JwtConfig jwtConfig;
-	
+
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-	
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-				http.csrf().disable().cors().and().headers().frameOptions().disable()
-				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				.and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
-				.and().authorizeRequests()
-						.antMatchers("/user/login", "/user/register", "/user/check/*").permitAll()
-						.antMatchers("*").hasAnyAuthority("USER","User","*")
-						.anyRequest().authenticated()
-				.and().addFilter(new JwtUsernameAndPasswordAuthenticatorFilter(authenticationManager()))
-				.addFilterAfter(new JwtTokenVerifier(authenticationManager(),jwtConfig,customUserDetailsService),JwtUsernameAndPasswordAuthenticatorFilter.class);
+		http.csrf().disable().cors().and().headers().frameOptions().disable().and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling()
+				.authenticationEntryPoint(authenticationEntryPoint).and().authorizeRequests()
+				.antMatchers("/user/login", "/user/register", "/user/check/*").permitAll().antMatchers("*")
+				.hasAnyAuthority("USER", "User", "*").anyRequest().authenticated().and()
+				.addFilter(new JwtUsernameAndPasswordAuthenticatorFilter(authenticationManager()))
+				.addFilterAfter(new JwtTokenVerifier(jwtConfig), JwtUsernameAndPasswordAuthenticatorFilter.class);
 	}
 
 	@Override

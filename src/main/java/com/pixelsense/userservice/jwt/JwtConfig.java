@@ -3,7 +3,6 @@ package com.pixelsense.userservice.jwt;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -23,11 +22,12 @@ public class JwtConfig {
 	public JwtConfig() {
 
 	}
+
 	@Bean
 	public SecretKey getSecretKeySigned() {
 		return Keys.hmacShaKeyFor(secretKey.getBytes());
 	}
-	
+
 	public String getAuthorizationheader() {
 		return HttpHeaders.AUTHORIZATION;
 	}
