@@ -15,11 +15,15 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.GenericGenerator;
+
 @Entity
 public class Media {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Id @GeneratedValue(generator="system-uuid")
+	@GenericGenerator(name="system-uuid", strategy = "uuid")
 	private String mediaId;
 
 	private Date createdAt = new Date();
@@ -36,6 +40,12 @@ public class Media {
 	public Media() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public Media(Date createdAt, PixelSenseUser mediaPostedBy) {
+		super();
+		this.createdAt = createdAt;
+		this.mediaPostedBy = mediaPostedBy;
 	}
 
 	public Media(PixelSenseUser mediaPostedBy, List<PixelSenseUser> likedBy, List<MediaComment> mediaComments) {

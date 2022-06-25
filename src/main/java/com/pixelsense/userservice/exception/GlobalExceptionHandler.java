@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -18,12 +17,19 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<String> userNameNotFoundExceptionHandler() {
 		return new ResponseEntity<String>("User not found or does not exist..", HttpStatus.NOT_FOUND);
 	}
+
 	@ExceptionHandler(value = { UserSearchEmptyResult.class })
 	public ResponseEntity<String> userSearchEmptyResultHandler() {
 		return new ResponseEntity<String>("No users found..", HttpStatus.NOT_FOUND);
 	}
+
 	@ExceptionHandler(value = { IncorrectPasswordException.class })
 	public ResponseEntity<String> incorrectPasswordExceptionHandler() {
 		return new ResponseEntity<String>("Incorrect password..", HttpStatus.FORBIDDEN);
+	}
+
+	@ExceptionHandler(value = { PostNotFoundException.class })
+	public ResponseEntity<String> postNotFoundExceptionHandler() {
+		return new ResponseEntity<String>("Post not found..", HttpStatus.NOT_FOUND);
 	}
 }

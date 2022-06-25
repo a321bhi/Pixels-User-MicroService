@@ -2,6 +2,7 @@ package com.pixelsense.userservice.controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class UserController {
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String token = Jwts.builder().setSubject(user.getUserName()).claim("authorities", "USER")
-				.setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
+				.setIssuedAt(new Date()).setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
 				.signWith(jwtConfig.getSecretKeySigned()).compact();
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set(jwtConfig.getAuthorizationheader(), "Bearer " + token);
