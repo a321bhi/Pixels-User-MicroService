@@ -1,13 +1,12 @@
 package com.pixelsense.userservice.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -22,8 +21,9 @@ public class Media {
 
 //	@Id
 //	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Id @GeneratedValue(generator="system-uuid")
-	@GenericGenerator(name="system-uuid", strategy = "uuid")
+	@Id
+	@GeneratedValue(generator = "system-uuid")
+	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	private String mediaId;
 
 	private Date createdAt = new Date();
@@ -32,10 +32,10 @@ public class Media {
 
 	@ManyToMany
 	@JoinTable(name = "mediaLikedBy", joinColumns = @JoinColumn(name = "mediaID"), inverseJoinColumns = @JoinColumn(name = "userId"))
-	private List<PixelSenseUser> likedBy = new ArrayList<>();
+	private Set<PixelSenseUser> likedBy = new HashSet<>();
 
 	@OneToMany(mappedBy = "commentOnMediaId")
-	private List<MediaComment> mediaComments = new ArrayList<>();
+	private Set<MediaComment> mediaComments = new HashSet<>();
 
 	public Media() {
 		super();
@@ -48,7 +48,7 @@ public class Media {
 		this.mediaPostedBy = mediaPostedBy;
 	}
 
-	public Media(PixelSenseUser mediaPostedBy, List<PixelSenseUser> likedBy, List<MediaComment> mediaComments) {
+	public Media(PixelSenseUser mediaPostedBy, HashSet<PixelSenseUser> likedBy, HashSet<MediaComment> mediaComments) {
 		super();
 		this.mediaPostedBy = mediaPostedBy;
 		this.likedBy = likedBy;
@@ -102,19 +102,19 @@ public class Media {
 		this.mediaPostedBy = mediaPostedBy;
 	}
 
-	public List<PixelSenseUser> getLikedBy() {
+	public Set<PixelSenseUser> getLikedBy() {
 		return likedBy;
 	}
 
-	public void setLikedBy(List<PixelSenseUser> likedBy) {
+	public void setLikedBy(Set<PixelSenseUser> likedBy) {
 		this.likedBy = likedBy;
 	}
 
-	public List<MediaComment> getMediaComments() {
+	public Set<MediaComment> getMediaComments() {
 		return mediaComments;
 	}
 
-	public void setMediaComments(List<MediaComment> mediaComments) {
+	public void setMediaComments(Set<MediaComment> mediaComments) {
 		this.mediaComments = mediaComments;
 	}
 

@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,9 +22,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pixelsense.userservice.doa.UserRepository;
 import com.pixelsense.userservice.exception.UserSearchEmptyResult;
+import com.pixelsense.userservice.exception.UsernameNotFoundException;
 import com.pixelsense.userservice.jwt.JwtConfig;
 import com.pixelsense.userservice.model.PixelSenseUser;
 import com.pixelsense.userservice.service.UserServiceImpl;
@@ -32,6 +36,7 @@ import io.jsonwebtoken.Jwts;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "*")
 public class UserController {
 
 	@Autowired
@@ -39,6 +44,9 @@ public class UserController {
 
 	@Autowired
 	private UserServiceImpl userService;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	JwtConfig jwtConfig;
@@ -63,16 +71,18 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody PixelSenseUser user) {
+	public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
 		final Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword()));
+				.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String token = Jwts.builder().setSubject(user.getUserName()).claim("authorities", "USER")
-				.setIssuedAt(new Date()).setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
+		String token = Jwts.builder().setSubject(username).claim("authorities", "USER").setIssuedAt(new Date())
+				.setExpiration(java.sql.Date.valueOf(LocalDate.now().plusWeeks(2)))
 				.signWith(jwtConfig.getSecretKeySigned()).compact();
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set(jwtConfig.getAuthorizationheader(), "Bearer " + token);
+		responseHeaders.set("Access-Control-Expose-Headers", jwtConfig.getAuthorizationheader());
+		System.out.println("here");
 		return ResponseEntity.ok().headers(responseHeaders).body("Logged in");
 //		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 //		Optional<PixelSenseUser> opt = userService.findUser(user.getUserName());
@@ -128,4 +138,47 @@ public class UserController {
 		return new ResponseEntity<String>(updatedUser.getFirstName() + "'s data has been updated", HttpStatus.OK);
 	}
 
+	@GetMapping("/getUserDetails")
+	public PixelSenseUser getUserDetails() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Optional<PixelSenseUser> optUser = userRepository.findById(username);
+		if (!optUser.isPresent()) {
+			throw new UsernameNotFoundException();
+		}
+		PixelSenseUser responseUser = optUser.get();
+		responseUser.setLikedMedia(null);
+		responseUser.setMediaList(null);
+		responseUser.setCommentsOnMedia(null);
+		responseUser.setPassword(null);
+		responseUser.setLikedMedia(null);
+		return responseUser;
+	}
+
+	@PostMapping("/updateDesc")
+	public ResponseEntity<String> updateProfileDescription(@RequestParam String profileDescription) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Optional<PixelSenseUser> optionalUser = userRepository.findById(username);
+		if (optionalUser.isEmpty()) {
+			throw new UsernameNotFoundException();
+		}
+		PixelSenseUser user = optionalUser.get();
+		user.setProfileDescription(profileDescription);
+		userRepository.save(user);
+		return new ResponseEntity<String>("description updated", HttpStatus.OK);
+	}
+	@GetMapping("/getUser/{queryUsername}")
+	public PixelSenseUser getUser(@PathVariable String queryUsername) {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Optional<PixelSenseUser> optUser = userRepository.findById(queryUsername);
+		if(!optUser.isPresent()) {
+			throw new UsernameNotFoundException();
+		}
+		PixelSenseUser responseUser = optUser.get();
+		responseUser.setLikedMedia(null);
+		responseUser.setMediaList(null);
+		responseUser.setCommentsOnMedia(null);
+		responseUser.setPassword(null);
+		responseUser.setLikedMedia(null);
+		return responseUser;
+	}
 }

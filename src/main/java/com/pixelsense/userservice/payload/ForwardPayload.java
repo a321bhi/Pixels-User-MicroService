@@ -1,9 +1,11 @@
-package com.pixelsense.userservice.model;
+package com.pixelsense.userservice.payload;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.pixelsense.userservice.model.MediaComment;
 
 public class ForwardPayload implements Serializable {
 	/**
@@ -14,8 +16,7 @@ public class ForwardPayload implements Serializable {
 	private Date mediaDate;
 	private List<String> mediaTags = new ArrayList<>();
 	private String mediaCaption;
-	private String imageAsBase64;
-
+	private String imageAsBase64;	
 
 	public ForwardPayload(String mediaId, Date mediaDate, List<String> mediaTags, String mediaCaption, String imageAsBase64) {
 			this.setMediaId(mediaId);

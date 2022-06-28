@@ -1,10 +1,10 @@
 package com.pixelsense.userservice.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -30,9 +30,18 @@ public class PixelSenseUser implements Serializable {
 	private Date dateOfBirth;
 	private String gender;
 	private Date dateOfJoining = new Date();
-	private Boolean privacyStatus;
+	private Boolean privacyStatus =false;
 	private String profilePicId;
 	String password;
+	private String profileDescription;
+	
+	public String getProfileDescription() {
+		return profileDescription;
+	}
+
+	public void setProfileDescription(String profileDescription) {
+		this.profileDescription = profileDescription;
+	}
 
 	public PixelSenseUser(String username, String password) {
 		super();
@@ -41,20 +50,23 @@ public class PixelSenseUser implements Serializable {
 	}
 
 	@OneToMany(mappedBy = "mediaPostedBy")
-	private List<Media> mediaList = new ArrayList<>();
+	private Set<Media> mediaList = new HashSet<>();
 
 	@ManyToMany(mappedBy = "likedBy")
-	private List<Media> likedMedia = new ArrayList<>();
+	private Set<Media> likedMedia = new HashSet<>();
+
+	@ManyToMany(mappedBy = "commentLikedBy")
+	private Set<MediaComment> commentsLiked = new HashSet<>();
 
 	@OneToMany(mappedBy = "commentByUser")
-	private List<MediaComment> commentsOnMedia = new ArrayList<>();
+	private Set<MediaComment> commentsOnMedia = new HashSet<>();
 
 	@ManyToMany(mappedBy = "following")
-	private List<PixelSenseUser> follower = new ArrayList<>();
+	private Set<PixelSenseUser> follower = new HashSet<>();
 
 	@ManyToMany
 	@JoinTable(name = "followers", joinColumns = @JoinColumn(name = "follows"), inverseJoinColumns = @JoinColumn(name = "userId"))
-	private List<PixelSenseUser> following = new ArrayList<>();
+	private Set<PixelSenseUser> following = new HashSet<>();
 
 	/*
 	 * End of declaration of variables and beginning of standard getters/setters,
@@ -212,43 +224,43 @@ public class PixelSenseUser implements Serializable {
 		this.password = password;
 	}
 
-	public List<Media> getMediaList() {
+	public Set<Media> getMediaList() {
 		return mediaList;
 	}
 
-	public void setMediaList(List<Media> mediaList) {
+	public void setMediaList(HashSet<Media> mediaList) {
 		this.mediaList = mediaList;
 	}
 
-	public List<Media> getLikedMedia() {
+	public Set<Media> getLikedMedia() {
 		return likedMedia;
 	}
 
-	public void setLikedMedia(List<Media> likedMedia) {
+	public void setLikedMedia(HashSet<Media> likedMedia) {
 		this.likedMedia = likedMedia;
 	}
 
-	public List<MediaComment> getCommentsOnMedia() {
+	public Set<MediaComment> getCommentsOnMedia() {
 		return commentsOnMedia;
 	}
 
-	public void setCommentsOnMedia(List<MediaComment> commentsOnMedia) {
+	public void setCommentsOnMedia(HashSet<MediaComment> commentsOnMedia) {
 		this.commentsOnMedia = commentsOnMedia;
 	}
 
-	public List<PixelSenseUser> getFollower() {
+	public Set<PixelSenseUser> getFollower() {
 		return follower;
 	}
 
-	public void setFollower(List<PixelSenseUser> follower) {
+	public void setFollower(HashSet<PixelSenseUser> follower) {
 		this.follower = follower;
 	}
 
-	public List<PixelSenseUser> getFollowing() {
+	public Set<PixelSenseUser> getFollowing() {
 		return following;
 	}
 
-	public void setFollowing(List<PixelSenseUser> following) {
+	public void setFollowing(HashSet<PixelSenseUser> following) {
 		this.following = following;
 	}
 

@@ -1,19 +1,25 @@
 package com.pixelsense.userservice.model;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class MediaComment {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(generator = "system-uuid")
+	@GenericGenerator(name = "system-uuid", strategy = "uuid")
 	private String commentId;
 
 	private String commentContent;
@@ -26,6 +32,10 @@ public class MediaComment {
 	@ManyToOne
 	@JoinColumn(name = "mediaId")
 	private Media commentOnMediaId;
+
+	@ManyToMany
+	@JoinTable(name = "commentLikedBy", joinColumns = @JoinColumn(name = "commendId"), inverseJoinColumns = @JoinColumn(name = "userId"))
+	private Set<PixelSenseUser> commentLikedBy = new HashSet<>();
 
 	public MediaComment() {
 		super();
