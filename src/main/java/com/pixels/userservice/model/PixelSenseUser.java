@@ -37,21 +37,6 @@ public class PixelSenseUser implements Serializable {
 	String password;
 	private String profileBio;
 
-	
-	public String getProfileBio() {
-		return profileBio;
-	}
-
-	public void setProfileBio(String profileBio) {
-		this.profileBio = profileBio;
-	}
-
-	public PixelSenseUser(String username, String password) {
-		super();
-		this.username = username;
-		this.password = password;
-	}
-
 	@OneToMany(mappedBy = "mediaPostedBy")
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<Media> mediaList = new HashSet<>();
@@ -82,6 +67,21 @@ public class PixelSenseUser implements Serializable {
 	 * constructors, equals, hashcode and toString method
 	 */
 
+
+	public String getProfileBio() {
+		return profileBio;
+	}
+
+	public void setProfileBio(String profileBio) {
+		this.profileBio = profileBio;
+	}
+
+	public PixelSenseUser(String username, String password) {
+		super();
+		this.username = username;
+		this.password = password;
+	}
+	
 	public String getUserName() {
 		return username;
 	}
@@ -113,7 +113,7 @@ public class PixelSenseUser implements Serializable {
 
 	@Override
 	public String toString() {
-		return "PixelSenseUser [username=" + username + ", fullName=" + fullName + ", firstName=" + firstName
+		return "PixelsUser [username=" + username + ", fullName=" + fullName + ", firstName=" + firstName
 				+ ", middleName=" + middleName + ", lastName=" + lastName + ", emailAddress=" + emailAddress
 				+ ", phoneNumber=" + phoneNumber + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender
 				+ ", dateOfJoining=" + dateOfJoining + ", privacyStatus=" + privacyStatus + ", profilePicId="
@@ -278,11 +278,11 @@ public class PixelSenseUser implements Serializable {
 		this.following = followingSet;
 	}
 
-	public void refactorFollowerList() {
-		HashSet<PixelSenseUser> updatedFollowerSet = new HashSet<>();
-		this.follower.stream().forEach(t -> {
-			updatedFollowerSet.add(new PixelSenseUser(t.getUserName()));
-		});
-		this.setFollower(updatedFollowerSet);
-	}
+//	public void refactorFollowerList() {
+//		HashSet<PixelsUser> updatedFollowerSet = new HashSet<>();
+//		this.follower.stream().forEach(t -> {
+//			updatedFollowerSet.add(new PixelsUser(t.getUserName()));
+//		});
+//		this.setFollower(updatedFollowerSet);
+//	}
 }

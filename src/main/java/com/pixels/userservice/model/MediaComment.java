@@ -6,7 +6,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -43,14 +42,13 @@ public class MediaComment {
 	private Set<PixelSenseUser> commentLikedBy = new HashSet<>();
 
 	@ManyToOne
-	@JoinColumn(name="COMMENT_ON_COMMENTID")
+	@JoinColumn(name = "COMMENT_ON_COMMENTID")
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private MediaComment commentOnCommentId;
-	
-	@OneToMany(mappedBy = "commentOnCommentId",cascade = CascadeType.ALL, orphanRemoval = true)
+
+	@OneToMany(mappedBy = "commentOnCommentId", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<MediaComment> commentsOnCommment = new HashSet<>();
-	
-	
+
 	public MediaComment getCommentOnCommentId() {
 		return commentOnCommentId;
 	}
@@ -71,8 +69,7 @@ public class MediaComment {
 		super();
 	}
 
-	public MediaComment( String commentContent, PixelSenseUser commentByUser,
-			MediaComment commentOnCommentId) {
+	public MediaComment(String commentContent, PixelSenseUser commentByUser, MediaComment commentOnCommentId) {
 		super();
 		this.commentContent = commentContent;
 		this.commentByUser = commentByUser;

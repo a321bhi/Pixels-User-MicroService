@@ -1,11 +1,11 @@
-package com.pixels.userservice.payload;
+package com.pixels.userservice.dto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ForwardPayload implements Serializable {
+public class MediaForwardingDTO implements Serializable {
 	/**
 	 * 
 	 */
@@ -23,7 +23,7 @@ public class ForwardPayload implements Serializable {
 				+ ", mediaCaption=" + mediaCaption + "]";
 	}
 
-	public ForwardPayload(String mediaId, Date mediaDate, List<String> mediaTags, String mediaCaption,
+	public MediaForwardingDTO(String mediaId, Date mediaDate, List<String> mediaTags, String mediaCaption,
 			String imageAsBase64) {
 		this.setMediaId(mediaId);
 		this.mediaDate = mediaDate;
@@ -32,7 +32,7 @@ public class ForwardPayload implements Serializable {
 		this.imageAsBase64 = imageAsBase64;
 	}
 
-	public ForwardPayload() {
+	public MediaForwardingDTO() {
 		super();
 	}
 

@@ -1,4 +1,4 @@
-package com.pixels.userservice.payload;
+package com.pixels.userservice.dto;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -8,7 +8,7 @@ import java.util.Set;
 
 import com.pixels.userservice.model.PixelSenseUser;
 
-public class UserResponsePayload implements Serializable {
+public class PixelsUserDTO implements Serializable {
 	/**
 	 * 
 	 */
@@ -46,7 +46,7 @@ public class UserResponsePayload implements Serializable {
 		this.profilePicAsBase64 = profilePicAsBase64;
 	}
 
-	public UserResponsePayload(String username, String fullName, String emailAddress, String phoneNumber,
+	public PixelsUserDTO(String username, String fullName, String emailAddress, String phoneNumber,
 			Date dateOfBirth, String gender, Date dateOfJoining, Boolean privacyStatus, String profilePicAsBase64,
 			String profileDescription) {
 		super();
@@ -63,12 +63,12 @@ public class UserResponsePayload implements Serializable {
 	}
 
 
-	public UserResponsePayload() {
+	public PixelsUserDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public UserResponsePayload(PixelSenseUser responseUser) {
+	public PixelsUserDTO(PixelSenseUser responseUser) {
 		this.username = responseUser.getUserName();
 		this.fullName = responseUser.getFullName();
 //		this.emailAddress = responseUser.getEmailAddress();
@@ -93,7 +93,7 @@ public class UserResponsePayload implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UserResponsePayload other = (UserResponsePayload) obj;
+		PixelsUserDTO other = (PixelsUserDTO) obj;
 		return Objects.equals(username, other.username);
 	}
 

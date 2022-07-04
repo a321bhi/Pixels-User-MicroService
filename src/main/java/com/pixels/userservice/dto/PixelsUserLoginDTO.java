@@ -1,6 +1,6 @@
-package com.pixels.userservice.model;
+package com.pixels.userservice.dto;
 
-public class LoginFormModel{
+public class PixelsUserLoginDTO{
 	private String username;
 	private String password;
 	public String getUsername() {
@@ -15,12 +15,12 @@ public class LoginFormModel{
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public LoginFormModel(String username, String password) {
+	public PixelsUserLoginDTO(String username, String password) {
 		super();
 		this.username = username;
 		this.password = password;
 	}
-	public LoginFormModel() {
+	public PixelsUserLoginDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

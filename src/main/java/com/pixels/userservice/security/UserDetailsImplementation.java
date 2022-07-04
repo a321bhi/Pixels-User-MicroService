@@ -16,11 +16,11 @@ public class UserDetailsImplementation implements UserDetails {
 	 */
 
 	private static final long serialVersionUID = 1L;
-	private PixelSenseUser pixelSenseUser;
+	private PixelSenseUser pixelsUser;
 
-	public UserDetailsImplementation(PixelSenseUser pixelSenseUser) {
+	public UserDetailsImplementation(PixelSenseUser pixelsUser) {
 		super();
-		this.pixelSenseUser = pixelSenseUser;
+		this.pixelsUser = pixelsUser;
 	}
 
 	@Override
@@ -30,12 +30,12 @@ public class UserDetailsImplementation implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		return pixelSenseUser.getPassword();
+		return pixelsUser.getPassword();
 	}
 
 	@Override
 	public String getUsername() {
-		return pixelSenseUser.getUserName();
+		return pixelsUser.getUserName();
 	}
 
 	@Override

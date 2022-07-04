@@ -1,6 +1,6 @@
-package com.pixels.userservice.model;
+package com.pixels.userservice.dto;
 
-public class Bio {
+public class UserBioDTO {
 
 	private String bio;
 
@@ -12,12 +12,12 @@ public class Bio {
 		this.bio = bio;
 	}
 
-	public Bio(String bio) {
+	public UserBioDTO(String bio) {
 		super();
 		this.bio = bio;
 	}
 
-	public Bio() {
+	public UserBioDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

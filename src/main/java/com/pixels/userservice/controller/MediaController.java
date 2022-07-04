@@ -30,15 +30,15 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.pixels.userservice.dto.MediaForwardingDTO;
+import com.pixels.userservice.dto.MediaRequestDTO;
+import com.pixels.userservice.dto.MediaResponseDTO;
 import com.pixels.userservice.exception.CommentNotFound;
 import com.pixels.userservice.exception.PostNotFoundException;
 import com.pixels.userservice.exception.UsernameNotFoundException;
 import com.pixels.userservice.model.Media;
 import com.pixels.userservice.model.MediaComment;
 import com.pixels.userservice.model.PixelSenseUser;
-import com.pixels.userservice.payload.ForwardPayload;
-import com.pixels.userservice.payload.RequestPayload;
-import com.pixels.userservice.payload.ResponsePayload;
 import com.pixels.userservice.service.MediaCommentServiceImpl;
 import com.pixels.userservice.service.MediaServiceImpl;
 import com.pixels.userservice.service.UserServiceImpl;
@@ -63,7 +63,7 @@ public class MediaController {
 	MediaCommentServiceImpl mediaCommentServiceImpl;
 
 	@PostMapping(value = "/media", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<String> uploadMedia(@ModelAttribute RequestPayload payload) {
+	public ResponseEntity<String> uploadMedia(@ModelAttribute MediaRequestDTO payload) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<PixelSenseUser> optionalUser = userServiceImpl.findUserById(username);
 		if (optionalUser.isEmpty()) {
@@ -75,16 +75,16 @@ public class MediaController {
 
 		WebClient webClient = webClientBuilder.baseUrl(baseUrl).build();
 
-		ForwardPayload forwardPayload = null;
+		MediaForwardingDTO forwardPayload = null;
 		try {
-			forwardPayload = new ForwardPayload(media.getMediaId(), media.getCreatedAt(), payload.getMediaTags(),
+			forwardPayload = new MediaForwardingDTO(media.getMediaId(), media.getCreatedAt(), payload.getMediaTags(),
 					payload.getMediaCaption(), Base64.getEncoder().encodeToString(payload.getImage().getBytes()));
 		} catch (IOException e) {
 			System.out.print("ERROR in base64 conv");
 		}
 
 		Mono<String> response = webClient.post().uri("/service/media")
-				.body(Mono.just(forwardPayload), ForwardPayload.class).exchangeToMono(res -> {
+				.body(Mono.just(forwardPayload), MediaForwardingDTO.class).exchangeToMono(res -> {
 					if (res.statusCode().equals(HttpStatus.OK)) {
 						return res.bodyToMono(String.class);
 					} else if (res.statusCode().is4xxClientError()) {
@@ -99,7 +99,7 @@ public class MediaController {
 	}
 
 	@PatchMapping("/media-caption")
-	public ResponseEntity<String> updateMediaDetails(@RequestBody ForwardPayload forwardPayload) {
+	public ResponseEntity<String> updateMediaDetails(@RequestBody MediaForwardingDTO forwardPayload) {
 //		System.out.println(forwardPayload.toString());
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<Media> optionalMediaEntity = mediaServiceImpl.findMediaById(forwardPayload.getMediaId());
@@ -115,7 +115,7 @@ public class MediaController {
 		WebClient webClient = webClientBuilder.baseUrl(baseUrl).build();
 
 		Mono<String> response = webClient.patch().uri("/service/media-caption")
-				.body(Mono.just(forwardPayload), ForwardPayload.class).exchangeToMono(res -> {
+				.body(Mono.just(forwardPayload), MediaForwardingDTO.class).exchangeToMono(res -> {
 					if (res.statusCode().equals(HttpStatus.OK)) {
 						return res.bodyToMono(String.class);
 					} else if (res.statusCode().is4xxClientError()) {
@@ -162,13 +162,13 @@ public class MediaController {
 	}
 
 	@GetMapping("/media/all/{username}")
-	public List<ResponsePayload> getAllMediaOfOneUser(@PathVariable String username) {
+	public List<MediaResponseDTO> getAllMediaOfOneUser(@PathVariable String username) {
 		String usernameRequestedBy = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<PixelSenseUser> optionalUser = userServiceImpl.findUserById(username);
 		if (optionalUser.isEmpty()) {
 			throw new UsernameNotFoundException();
 		}
-		List<ResponsePayload> listOfResponsePayload = new ArrayList<>();
+		List<MediaResponseDTO> listOfResponsePayload = new ArrayList<>();
 		PixelSenseUser user = optionalUser.get();
 		if (!usernameRequestedBy.equals(username)) {
 			if (user.getPrivacyStatus()) {
@@ -181,18 +181,18 @@ public class MediaController {
 				.codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(-1)).build();
 		WebClient webClient = webClientBuilder.exchangeStrategies(strategies).baseUrl(baseUrl).build();
 
-		Mono<List<ForwardPayload>> response = webClient.post().uri("/service/getAllMedia")
+		Mono<List<MediaForwardingDTO>> response = webClient.post().uri("/service/getAllMedia")
 				.body(Mono.just(mediaIdQueryList), new ParameterizedTypeReference<List<String>>() {
-				}).retrieve().bodyToMono(new ParameterizedTypeReference<List<ForwardPayload>>() {
+				}).retrieve().bodyToMono(new ParameterizedTypeReference<List<MediaForwardingDTO>>() {
 				});
-		List<ForwardPayload> listOfForwardPayload = (List<ForwardPayload>) response.block();
+		List<MediaForwardingDTO> listOfForwardPayload = (List<MediaForwardingDTO>) response.block();
 
-		ResponsePayload temporaryResponsePayload;
+		MediaResponseDTO temporaryResponsePayload;
 		Optional<Media> tempOptMedia;
 		Media tempMedia;
-		for (ForwardPayload tempPayload : listOfForwardPayload) {
+		for (MediaForwardingDTO tempPayload : listOfForwardPayload) {
 			Set<String> usersWhoLikedThisMedia = new HashSet<>();
-			temporaryResponsePayload = new ResponsePayload(tempPayload);
+			temporaryResponsePayload = new MediaResponseDTO(tempPayload);
 			tempOptMedia = mediaServiceImpl.findMediaById(temporaryResponsePayload.getMediaId());
 			tempMedia = tempOptMedia.get();
 			for (PixelSenseUser tempUser : tempMedia.getLikedBy()) {
@@ -323,7 +323,7 @@ public class MediaController {
 	}
 
 	@PostMapping(value = "/media/profile-pic", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public ResponseEntity<String> updateProfilePic(@ModelAttribute RequestPayload payload) {
+	public ResponseEntity<String> updateProfilePic(@ModelAttribute MediaRequestDTO payload) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<PixelSenseUser> optionalUser = userServiceImpl.findUserById(username);
 		if (optionalUser.isEmpty()) {
@@ -334,16 +334,16 @@ public class MediaController {
 		Date profilePicUpdateDate = new Date();
 		WebClient webClient = webClientBuilder.baseUrl(baseUrl).build();
 
-		ForwardPayload forwardPayload = null;
+		MediaForwardingDTO forwardPayload = null;
 		try {
-			forwardPayload = new ForwardPayload(mediaId, profilePicUpdateDate, payload.getMediaTags(),
+			forwardPayload = new MediaForwardingDTO(mediaId, profilePicUpdateDate, payload.getMediaTags(),
 					payload.getMediaCaption(), Base64.getEncoder().encodeToString(payload.getImage().getBytes()));
 		} catch (IOException e) {
 			System.out.print("ERROR in base64 conv");
 		}
 
 		Mono<String> response = webClient.post().uri("/service/media")
-				.body(Mono.just(forwardPayload), ForwardPayload.class).exchangeToMono(res -> {
+				.body(Mono.just(forwardPayload), MediaForwardingDTO.class).exchangeToMono(res -> {
 					if (res.statusCode().equals(HttpStatus.OK)) {
 						return res.bodyToMono(String.class);
 					} else if (res.statusCode().is4xxClientError()) {

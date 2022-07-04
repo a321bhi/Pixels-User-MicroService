@@ -1,4 +1,4 @@
-package com.pixels.userservice.payload;
+package com.pixels.userservice.dto;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class RequestPayload implements Serializable {
+public class MediaRequestDTO implements Serializable {
 	/**
 	 * 
 	 */
@@ -19,7 +19,7 @@ public class RequestPayload implements Serializable {
 	private MultipartFile image;
 	private String imageAsBase64;
 
-	public RequestPayload(Date mediaDate, List<String> mediaTags, String mediaCaption, MultipartFile image) {
+	public MediaRequestDTO(Date mediaDate, List<String> mediaTags, String mediaCaption, MultipartFile image) {
 		super();
 		this.mediaDate = mediaDate;
 		this.mediaTags = mediaTags;
@@ -27,13 +27,13 @@ public class RequestPayload implements Serializable {
 		this.image = image;
 	}
 
-	public RequestPayload(List<String> mediaTags, String mediaCaption, String imageAsBase64) {
+	public MediaRequestDTO(List<String> mediaTags, String mediaCaption, String imageAsBase64) {
 		this.mediaTags = mediaTags;
 		this.mediaCaption = mediaCaption;
 		this.setImageAsBase64(imageAsBase64);
 	}
 
-	public RequestPayload(String mediaId, Date mediaDate, List<String> mediaTags, String mediaCaption, String imageAsBase64) {
+	public MediaRequestDTO(String mediaId, Date mediaDate, List<String> mediaTags, String mediaCaption, String imageAsBase64) {
 		this.mediaId = mediaId;
 		this.mediaDate = mediaDate;
 		this.mediaTags = mediaTags;
@@ -41,7 +41,7 @@ public class RequestPayload implements Serializable {
 		this.setImageAsBase64(imageAsBase64);
 	}
 
-	public RequestPayload(String mediaId, Date mediaDate, List<String> mediaTags, String mediaCaption, MultipartFile image) {
+	public MediaRequestDTO(String mediaId, Date mediaDate, List<String> mediaTags, String mediaCaption, MultipartFile image) {
 		this.mediaId = mediaId;
 		this.mediaDate = mediaDate;
 		this.mediaTags = mediaTags;
@@ -49,7 +49,7 @@ public class RequestPayload implements Serializable {
 		this.image = image;
 	}
 
-	public RequestPayload() {
+	public MediaRequestDTO() {
 		super();
 	}
 

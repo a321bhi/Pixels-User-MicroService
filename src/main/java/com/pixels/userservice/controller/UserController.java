@@ -29,14 +29,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.pixels.userservice.dto.UserBioDTO;
+import com.pixels.userservice.dto.MediaForwardingDTO;
+import com.pixels.userservice.dto.PixelsUserLoginDTO;
+import com.pixels.userservice.dto.PixelsUserDTO;
 import com.pixels.userservice.exception.UserSearchEmptyResult;
 import com.pixels.userservice.exception.UsernameNotFoundException;
 import com.pixels.userservice.jwt.JwtConfig;
-import com.pixels.userservice.model.Bio;
-import com.pixels.userservice.model.LoginFormModel;
 import com.pixels.userservice.model.PixelSenseUser;
-import com.pixels.userservice.payload.ForwardPayload;
-import com.pixels.userservice.payload.UserResponsePayload;
 import com.pixels.userservice.service.UserServiceImpl;
 
 import io.jsonwebtoken.Jwts;
@@ -79,7 +79,7 @@ public class UserController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody LoginFormModel loginFormModel) {
+	public ResponseEntity<String> login(@RequestBody PixelsUserLoginDTO loginFormModel) {
 		String username = loginFormModel.getUsername();
 		String password = loginFormModel.getPassword();
 		final Authentication authentication = authenticationManager
@@ -136,7 +136,7 @@ public class UserController {
 	}
 
 	@PatchMapping("/bio")
-	public ResponseEntity<String> updateProfileDescription(@RequestBody Bio bio) {
+	public ResponseEntity<String> updateProfileDescription(@RequestBody UserBioDTO bio) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<PixelSenseUser> optionalUser = userServiceImpl.findUserById(username);
 		if (optionalUser.isEmpty()) {
@@ -165,7 +165,7 @@ public class UserController {
 	}
 	
 	@PatchMapping("/password")
-	public ResponseEntity<String> updatePassword(@RequestBody LoginFormModel loginFormModel) {
+	public ResponseEntity<String> updatePassword(@RequestBody PixelsUserLoginDTO loginFormModel) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<PixelSenseUser> optionalUser = userServiceImpl.findUserById(username);
 		if (optionalUser.isEmpty()) {
@@ -179,7 +179,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/{queryUsername}")
-	public UserResponsePayload getUser(@PathVariable String queryUsername) {
+	public PixelsUserDTO getUser(@PathVariable String queryUsername) {
 //		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<PixelSenseUser> optUser = userServiceImpl.findUserById(queryUsername);
 		if (!optUser.isPresent()) {
@@ -190,12 +190,12 @@ public class UserController {
 				.codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(-1)).build();
 		WebClient webClient = webClientBuilder.exchangeStrategies(strategies).baseUrl(baseUrl).build();
 
-		Mono<ForwardPayload> profilePicResponse = webClient.get().uri("/service/media/"+responseUser.getProfilePicId())
+		Mono<MediaForwardingDTO> profilePicResponse = webClient.get().uri("/service/media/"+responseUser.getProfilePicId())
 				.retrieve()
-				.bodyToMono(ForwardPayload.class);
-		ForwardPayload profilePic = (ForwardPayload) profilePicResponse.block();
+				.bodyToMono(MediaForwardingDTO.class);
+		MediaForwardingDTO profilePic = (MediaForwardingDTO) profilePicResponse.block();
 
-		UserResponsePayload userResponsePayload = new UserResponsePayload(responseUser);
+		PixelsUserDTO userResponsePayload = new PixelsUserDTO(responseUser);
 		userResponsePayload.setProfilePicAsBase64(profilePic.getImageAsBase64());
 		userResponsePayload.setFollower(responseUser);
 		userResponsePayload.setFollowing(responseUser);
