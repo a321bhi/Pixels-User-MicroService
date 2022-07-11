@@ -82,6 +82,10 @@ public class UserController {
 	public ResponseEntity<String> login(@RequestBody PixelsUserLoginDTO loginFormModel) {
 		String username = loginFormModel.getUsername();
 		String password = loginFormModel.getPassword();
+		Optional<PixelSenseUser> user = userServiceImpl.findUserById(username);
+		if(!user.isPresent()) {
+			throw new UsernameNotFoundException();
+		}
 		final Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
@@ -92,7 +96,7 @@ public class UserController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set(jwtConfig.getAuthorizationheader(), "Bearer " + token);
 		responseHeaders.set("Access-Control-Expose-Headers", jwtConfig.getAuthorizationheader());
-		System.out.println("here");
+
 		return ResponseEntity.ok().headers(responseHeaders).body("Logged in");
 	}
 
@@ -157,6 +161,7 @@ public class UserController {
 		}
 		PixelSenseUser user = optionalUser.get();
 		user.setEmailAddress(updatedUser.getEmailAddress());
+		user.setCountryCode(updatedUser.getCountryCode());
 		user.setPhoneNumber(updatedUser.getPhoneNumber());
 		user.setFullName(updatedUser.getFullName());
 		user.setDateOfBirth(updatedUser.getDateOfBirth());
@@ -197,6 +202,9 @@ public class UserController {
 
 		PixelsUserDTO userResponsePayload = new PixelsUserDTO(responseUser);
 		userResponsePayload.setProfilePicAsBase64(profilePic.getImageAsBase64());
+		userResponsePayload.setEmailAddress(responseUser.getEmailAddress());
+		userResponsePayload.setCountryCode(responseUser.getCountryCode());
+		userResponsePayload.setPhoneNumber(responseUser.getPhoneNumber());
 		userResponsePayload.setFollower(responseUser);
 		userResponsePayload.setFollowing(responseUser);
 		return userResponsePayload;

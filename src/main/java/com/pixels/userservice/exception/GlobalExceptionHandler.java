@@ -14,8 +14,8 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(value = { UsernameNotFoundException.class })
-	public ResponseEntity<String> userNameNotFoundExceptionHandler() {
-		return new ResponseEntity<String>("User not found or does not exist..", HttpStatus.NOT_FOUND);
+	public ResponseEntity<String> usernameNotFoundExceptionHandler() {
+		return new ResponseEntity<String>("User not found or does not exist..", HttpStatus.NO_CONTENT);
 	}
 
 	@ExceptionHandler(value = { UserSearchEmptyResult.class })

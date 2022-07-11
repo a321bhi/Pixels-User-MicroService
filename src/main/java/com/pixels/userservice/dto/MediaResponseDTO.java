@@ -139,7 +139,7 @@ public class MediaResponseDTO implements Serializable {
 		});
 
 		this.mediaComments.stream().forEach(mediaComment -> {
-			Set<MediaComment> mediaCommentSet = mediaComment.getCommentsOnCommment();
+			Set<MediaComment> mediaCommentSet = mediaComment.getCommentsOnComment();
 			mediaCommentSet.stream()
 					.forEach(t -> t.setCommentByUser(new PixelSenseUser(t.getCommentByUser().getUserName())));
 			mediaCommentSet.stream().forEach(t -> {

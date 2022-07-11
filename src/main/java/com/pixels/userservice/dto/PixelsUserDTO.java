@@ -16,6 +16,7 @@ public class PixelsUserDTO implements Serializable {
 	String username;
 	private String fullName;
 	private String emailAddress;
+	private String countryCode;
 	private String phoneNumber;
 	private Date dateOfBirth;
 	private String gender;
@@ -25,7 +26,7 @@ public class PixelsUserDTO implements Serializable {
 	private String profileDescription;
 	private Set<String> follower = new HashSet<>();
 	private Set<String> following = new HashSet<>();
-
+	
 	public void setFollower(PixelSenseUser user) {
 		Set<PixelSenseUser> followerObjectSet = user.getFollower();
 		Set<String> followerSet = new HashSet<>();
@@ -183,6 +184,12 @@ public class PixelsUserDTO implements Serializable {
 
 	public void setFollowing(Set<String> following) {
 		this.following = following;
+	}
+	public String getCountryCode() {
+		return countryCode;
+	}
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
 	}
 
 }

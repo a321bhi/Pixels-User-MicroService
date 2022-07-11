@@ -9,13 +9,13 @@
 		<version>2.7.0</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.pixelsense</groupId>
-	<artifactId>pixelsense</artifactId>
+	<groupId>com.pixels</groupId>
+	<artifactId>pixels-userservice</artifactId>
 	<version>1</version>
-	<name>pixelsense</name>
-	<description>PixelSense API - Authentication, DB CRUD</description>
+	<name>pixels-userservice</name>
+	<description>pixels-userservice, API - Authentication, DB CRUD</description>
 	<properties>
-		<java.version>18</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 	

@@ -47,7 +47,7 @@ public class MediaComment {
 	private MediaComment commentOnCommentId;
 
 	@OneToMany(mappedBy = "commentOnCommentId", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<MediaComment> commentsOnCommment = new HashSet<>();
+	private Set<MediaComment> commentsOnComment = new HashSet<>();
 
 	public MediaComment getCommentOnCommentId() {
 		return commentOnCommentId;
@@ -57,12 +57,12 @@ public class MediaComment {
 		this.commentOnCommentId = commentOnCommentId;
 	}
 
-	public Set<MediaComment> getCommentsOnCommment() {
-		return commentsOnCommment;
+	public Set<MediaComment> getCommentsOnComment() {
+		return commentsOnComment;
 	}
 
-	public void setCommentsOnCommment(Set<MediaComment> commentsOnCommment) {
-		this.commentsOnCommment = commentsOnCommment;
+	public void setCommentsOnComment(Set<MediaComment> commentsOnComment) {
+		this.commentsOnComment = commentsOnComment;
 	}
 
 	public MediaComment() {

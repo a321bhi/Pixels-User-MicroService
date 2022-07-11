@@ -28,13 +28,14 @@ public class PixelSenseUser implements Serializable {
 	private String middleName;
 	private String lastName;
 	private String emailAddress;
+	private String countryCode;
 	private String phoneNumber;
 	private Date dateOfBirth;
 	private String gender;
 	private Date dateOfJoining = new Date();
 	private Boolean privacyStatus = false;
 	private String profilePicId = "4028818481adc7080181ae0195620001";
-	String password;
+	private String password;
 	private String profileBio;
 
 	@OneToMany(mappedBy = "mediaPostedBy")
@@ -58,7 +59,9 @@ public class PixelSenseUser implements Serializable {
 	private Set<PixelSenseUser> follower = new HashSet<>();
 
 	@ManyToMany
-	@JoinTable(name = "followers", joinColumns = @JoinColumn(name = "follows"), inverseJoinColumns = @JoinColumn(name = "userId"))
+	@JoinTable(name = "followers", 
+				joinColumns = @JoinColumn(name = "follows"), 
+				inverseJoinColumns = @JoinColumn(name = "userId"))
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<PixelSenseUser> following = new HashSet<>();
 
@@ -276,6 +279,14 @@ public class PixelSenseUser implements Serializable {
 
 	public void setFollowing(Set<PixelSenseUser> followingSet) {
 		this.following = followingSet;
+	}
+
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
 	}
 
 //	public void refactorFollowerList() {
