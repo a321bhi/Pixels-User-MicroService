@@ -14,6 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.pixels.userservice.model.Authority;
 
+
 @SpringBootApplication
 @EnableEurekaClient
 public class PixelsenseApplication {
