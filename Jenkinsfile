@@ -23,8 +23,8 @@ pipeline {
     stage('Deploy') {
       steps {
         bat 'docker build -t pixels-userservice .'
-        bat 'docker tag pixels-userservice 070761564037.dkr.ecr.us-east-2.amazonaws.com/pixels'
-        bat 'docker push 070761564037.dkr.ecr.us-east-2.amazonaws.com/pixels'
+        bat 'docker tag pixels-userservice abhi2104/pixels-userservice'
+        bat 'docker push abhi2104/pixels-userservice'
       }
     }
 
