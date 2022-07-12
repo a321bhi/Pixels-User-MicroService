@@ -36,7 +36,7 @@ pipeline {
 
       }
       steps {
-        sh 'docker pull 070761564037.dkr.ecr.us-east-2.amazonaws.com/pixels'
+        sh 'docker pull abhi2104/pixels-userservice'
       }
     }
 
