@@ -3,6 +3,7 @@ package com.pixels.userservice.controller;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -60,7 +61,7 @@ public class UserController {
 	JwtConfig jwtConfig;
 
 	@GetMapping("/all")
-	public ArrayList<PixelSenseUser> getAllUsers() {
+	public List<PixelSenseUser> getAllUsers() {
 		ArrayList<PixelSenseUser> searchResult = (ArrayList<PixelSenseUser>) userServiceImpl.findAllUsers();
 		if (searchResult.isEmpty()) {
 			throw new UserSearchEmptyResult();
@@ -72,10 +73,7 @@ public class UserController {
 	@GetMapping("/check/{username}")
 	public Boolean userNameExistsCheck(@PathVariable String username) {
 		Optional<PixelSenseUser> opt = userServiceImpl.findUserById(username);
-		if (!opt.isPresent()) {
-			return false;
-		}
-		return true;
+		return opt.isPresent();
 	}
 
 	@PostMapping("/login")
@@ -124,19 +122,19 @@ public class UserController {
 			user.setLastName(arrayOfName[numPartOfName - 1]);
 		}
 		userServiceImpl.addUser(user);
-		return new ResponseEntity<String>(user.getFirstName() + " data has been added", HttpStatus.OK);
+		return new ResponseEntity<>(user.getFirstName() + " data has been added", HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{userName}")
 	public ResponseEntity<String> deleteUser(@PathVariable String userName) {
 		userServiceImpl.deleteUserById(userName);
-		return new ResponseEntity<String>(userName + " removed successfully", HttpStatus.OK);
+		return new ResponseEntity<>(userName + " removed successfully", HttpStatus.OK);
 	}
 
 	@PutMapping("/{userName}")
 	public ResponseEntity<String> updateUser(@PathVariable String userName, @RequestBody PixelSenseUser updatedUser) {
 		userServiceImpl.updateUser(userName, updatedUser);
-		return new ResponseEntity<String>(updatedUser.getFirstName() + "'s data has been updated", HttpStatus.OK);
+		return new ResponseEntity<>(updatedUser.getFirstName() + "'s data has been updated", HttpStatus.OK);
 	}
 
 	@PatchMapping("/bio")
@@ -149,7 +147,7 @@ public class UserController {
 		PixelSenseUser user = optionalUser.get();
 		user.setProfileBio(bio.getBio());
 		userServiceImpl.addUser(user);
-		return new ResponseEntity<String>("description updated", HttpStatus.OK);
+		return new ResponseEntity<>("description updated", HttpStatus.OK);
 	}
 
 	@PatchMapping("/profile")
@@ -166,7 +164,7 @@ public class UserController {
 		user.setFullName(updatedUser.getFullName());
 		user.setDateOfBirth(updatedUser.getDateOfBirth());
 		userServiceImpl.addUser(user);
-		return new ResponseEntity<String>("profile updated", HttpStatus.OK);
+		return new ResponseEntity<>("profile updated", HttpStatus.OK);
 	}
 
 	@PatchMapping("/password")
@@ -180,12 +178,11 @@ public class UserController {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 		user.setPassword(bCryptPasswordEncoder.encode(loginFormModel.getPassword()));
 		userServiceImpl.addUser(user);
-		return new ResponseEntity<String>("profile updated", HttpStatus.OK);
+		return new ResponseEntity<>("profile updated", HttpStatus.OK);
 	}
 
 	@GetMapping("/{queryUsername}")
 	public PixelsUserDTO getUser(@PathVariable String queryUsername) {
-//		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<PixelSenseUser> optUser = userServiceImpl.findUserById(queryUsername);
 		if (!optUser.isPresent()) {
 			throw new UsernameNotFoundException();
@@ -194,10 +191,10 @@ public class UserController {
 		ExchangeStrategies strategies = ExchangeStrategies.builder()
 				.codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(-1)).build();
 		WebClient webClient = webClientBuilder.exchangeStrategies(strategies).baseUrl(baseUrl).build();
-
+		MediaRequestDTO profilePic;
 		Mono<MediaRequestDTO> profilePicResponse = webClient.get()
 				.uri("/service/media/" + responseUser.getProfilePicId()).retrieve().bodyToMono(MediaRequestDTO.class);
-		MediaRequestDTO profilePic = (MediaRequestDTO) profilePicResponse.block();
+		profilePic = profilePicResponse.block();
 
 		PixelsUserDTO userResponsePayload = new PixelsUserDTO(responseUser);
 		userResponsePayload.setProfilePicAsBase64(profilePic.getImageAsBase64());
@@ -223,7 +220,7 @@ public class UserController {
 		followingSet.add(userToBeFollowed);
 		requestingUser.setFollowing(followingSet);
 		userServiceImpl.addUser(requestingUser);
-		return new ResponseEntity<String>("follow updated", HttpStatus.OK);
+		return new ResponseEntity<>("follow updated", HttpStatus.OK);
 	}
 
 	@DeleteMapping("/follow/{usernameToUnfollow}")
@@ -240,6 +237,6 @@ public class UserController {
 		followingSet.remove(userToBeUnfollowed);
 		requestingUser.setFollowing(followingSet);
 		userServiceImpl.addUser(requestingUser);
-		return new ResponseEntity<String>("unfollow success", HttpStatus.OK);
+		return new ResponseEntity<>("unfollow success", HttpStatus.OK);
 	}
 }

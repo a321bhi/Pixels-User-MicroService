@@ -11,12 +11,10 @@ public class CommentNotFound extends RuntimeException implements Serializable{
 
 	public CommentNotFound() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public CommentNotFound(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 }

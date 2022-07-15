@@ -19,7 +19,6 @@ public class UserBioDTO {
 
 	public UserBioDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 }

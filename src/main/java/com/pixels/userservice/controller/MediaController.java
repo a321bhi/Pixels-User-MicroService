@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -79,7 +81,9 @@ public class MediaController {
 			forwardPayload = new MediaRequestDTO(media.getMediaId(), media.getCreatedAt(), payload.getMediaTags(),
 					payload.getMediaCaption(), Base64.getEncoder().encodeToString(payload.getImage().getBytes()));
 		} catch (IOException e) {
-			System.out.print("ERROR in base64 conv");
+			Logger LOGGER = 
+	                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+		       LOGGER.log(Level.SEVERE, "Error in base64 conversion");
 		}
 
 		Mono<String> response = webClient.post().uri("/service/media")
@@ -93,13 +97,12 @@ public class MediaController {
 					}
 				});
 		response.block();
-		return new ResponseEntity<String>("UCResponse - data has been added", HttpStatus.OK);
+		return new ResponseEntity<>("UCResponse - data has been added", HttpStatus.OK);
 
 	}
 
 	@PatchMapping("/media-caption")
 	public ResponseEntity<String> updateMediaDetails(@RequestBody MediaRequestDTO forwardPayload) {
-//		System.out.println(forwardPayload.toString());
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<Media> optionalMediaEntity = mediaServiceImpl.findMediaById(forwardPayload.getMediaId());
 		Media mediaToBeUpdated;
@@ -124,7 +127,7 @@ public class MediaController {
 					}
 				});
 		response.block();
-		return new ResponseEntity<String>("Media caption updated successfully.", HttpStatus.OK);
+		return new ResponseEntity<>("Media caption updated successfully.", HttpStatus.OK);
 	}
 
 	@DeleteMapping("/media/{mediaId}")
@@ -157,7 +160,7 @@ public class MediaController {
 			}
 		});
 		response.block();
-		return new ResponseEntity<String>("Media deletion successful.", HttpStatus.OK);
+		return new ResponseEntity<>("Media deletion successful.", HttpStatus.OK);
 	}
 
 	@GetMapping("/media/all/{username}")
@@ -184,7 +187,7 @@ public class MediaController {
 				.body(Mono.just(mediaIdQueryList), new ParameterizedTypeReference<List<String>>() {
 				}).retrieve().bodyToMono(new ParameterizedTypeReference<List<MediaRequestDTO>>() {
 				});
-		List<MediaRequestDTO> listOfForwardPayload = (List<MediaRequestDTO>) response.block();
+		List<MediaRequestDTO> listOfForwardPayload = response.block();
 
 		MediaResponseDTO temporaryResponsePayload;
 		Optional<Media> tempOptMedia;
@@ -193,6 +196,9 @@ public class MediaController {
 			Set<String> usersWhoLikedThisMedia = new HashSet<>();
 			temporaryResponsePayload = new MediaResponseDTO(tempPayload);
 			tempOptMedia = mediaServiceImpl.findMediaById(temporaryResponsePayload.getMediaId());
+			if(tempOptMedia.isEmpty()) {
+				continue;
+			}
 			tempMedia = tempOptMedia.get();
 			for (PixelSenseUser tempUser : tempMedia.getLikedBy()) {
 				usersWhoLikedThisMedia.add(tempUser.getUserName());
@@ -224,7 +230,7 @@ public class MediaController {
 		likedByList.add(user);
 		media.setLikedBy(likedByList);
 		mediaServiceImpl.addMedia(media);
-		return new ResponseEntity<String>("Liked media", HttpStatus.OK);
+		return new ResponseEntity<>("Liked media", HttpStatus.OK);
 	}
 
 	@DeleteMapping("/media/likes/{mediaId}")
@@ -246,15 +252,12 @@ public class MediaController {
 			media.setLikedBy(likedByList);
 			mediaServiceImpl.addMedia(media);
 		}
-		return new ResponseEntity<String>("like removed", HttpStatus.OK);
+		return new ResponseEntity<>("like removed", HttpStatus.OK);
 	}
 
 	@PostMapping("/comment/comment")
 	public ResponseEntity<String> commentOnComment(@RequestParam String commentId, @RequestParam String commentContent) {
-		System.out.println(commentId);
-		System.out.println(commentContent);
 		Optional<MediaComment> mediaCommentOpt =  mediaCommentServiceImpl.findMediaCommentById(commentId);
-//		Optional<Media> optionalMedia = mediaServiceImpl.findMediaById(mediaId);
 		if (!mediaCommentOpt.isPresent()) {
 			throw new CommentNotFound();
 		}
@@ -267,7 +270,7 @@ public class MediaController {
 		PixelSenseUser user = optionalUser.get();
 		MediaComment commentOnComment = new MediaComment(commentContent, user, mediaComment);
 		mediaCommentServiceImpl.addMediaComment(commentOnComment);
-		return new ResponseEntity<String>("comment added!", HttpStatus.OK);
+		return new ResponseEntity<>("comment added!", HttpStatus.OK);
 	}
 	
 
@@ -286,7 +289,7 @@ public class MediaController {
 		PixelSenseUser user = optionalUser.get();
 		MediaComment mediaComment = new MediaComment(commentContent, user, media);
 		mediaCommentServiceImpl.addMediaComment(mediaComment);
-		return new ResponseEntity<String>("comment added!", HttpStatus.OK);
+		return new ResponseEntity<>("comment added!", HttpStatus.OK);
 	}
 
 	@DeleteMapping("/media/comment/{commentId}")
@@ -302,7 +305,7 @@ public class MediaController {
 			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
 		}
 		mediaCommentServiceImpl.deleteMediaComment(mediaComment);
-		return new ResponseEntity<String>("comment deleted!", HttpStatus.OK);
+		return new ResponseEntity<>("comment deleted!", HttpStatus.OK);
 	}
 
 	@DeleteMapping("/comment/comment/{commentId}")
@@ -318,7 +321,7 @@ public class MediaController {
 			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
 		}
 		mediaCommentServiceImpl.deleteMediaComment(mediaComment);
-		return new ResponseEntity<String>("comment deleted!", HttpStatus.OK);
+		return new ResponseEntity<>("comment deleted!", HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/media/profile-pic", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -338,7 +341,9 @@ public class MediaController {
 			forwardPayload = new MediaRequestDTO(mediaId, profilePicUpdateDate, payload.getMediaTags(),
 					payload.getMediaCaption(), Base64.getEncoder().encodeToString(payload.getImage().getBytes()));
 		} catch (IOException e) {
-			System.out.print("ERROR in base64 conv");
+			Logger LOGGER = 
+	                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+		       LOGGER.log(Level.SEVERE, "Error in base64 conversion");
 		}
 
 		Mono<String> response = webClient.post().uri("/service/media")
@@ -354,8 +359,7 @@ public class MediaController {
 		response.block();
 		user.setProfilePicId(mediaId);
 		userServiceImpl.addUser(user);
-		System.out.println(mediaId);
-		return new ResponseEntity<String>("Profile pic updated", HttpStatus.OK);
+		return new ResponseEntity<>("Profile pic updated", HttpStatus.OK);
 	}
 
 	@DeleteMapping("/media/profile-pic")
@@ -385,7 +389,7 @@ public class MediaController {
 		response.block();
 		user.setProfilePicId("4028818481adc7080181ae0195620001");
 		userServiceImpl.addUser(user);
-		return new ResponseEntity<String>("profile pic deleted!", HttpStatus.OK);
+		return new ResponseEntity<>("profile pic deleted!", HttpStatus.OK);
 	}
 
 	@PostMapping("/media/comment-likes")
@@ -406,7 +410,7 @@ public class MediaController {
 		likedByList.add(user);
 		mediaComment.setCommentLikedBy(likedByList);
 		mediaCommentServiceImpl.addMediaComment(mediaComment);
-		return new ResponseEntity<String>("Liked comment", HttpStatus.OK);
+		return new ResponseEntity<>("Liked comment", HttpStatus.OK);
 	}
 
 	@DeleteMapping("/media/comment-likes/{commentId}")
@@ -428,6 +432,6 @@ public class MediaController {
 			mediaComment.setCommentLikedBy(likedByList);
 			mediaCommentServiceImpl.addMediaComment(mediaComment);
 		}
-		return new ResponseEntity<String>("like removed media", HttpStatus.OK);
+		return new ResponseEntity<>("like removed media", HttpStatus.OK);
 	}
 }

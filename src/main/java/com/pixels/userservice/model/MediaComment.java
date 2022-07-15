@@ -133,10 +133,6 @@ public class MediaComment {
 	public PixelSenseUser getCommentByUser() {
 		return this.commentByUser;
 	}
-//	
-//	public PixelSenseUser getCommentByUserOnlyUsernames() {
-//		return new PixelSenseUser(commentByUser.getUserName());
-//	}
 
 	public void setCommentByUser(PixelSenseUser commentByUser) {
 		this.commentByUser = commentByUser;

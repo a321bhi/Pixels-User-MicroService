@@ -19,7 +19,7 @@ public class JwtConfig {
 	private Integer tokenExpirationAfterDays;
 
 	public JwtConfig() {
-
+		super();
 	}
 
 	@Bean

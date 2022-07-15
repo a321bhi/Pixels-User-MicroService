@@ -18,32 +18,27 @@ public class MediaServiceImpl implements MediaService{
 	
 	@Override
 	public List<String> getAllMediaOfOneUser(PixelSenseUser user) {
-		List<String> listOfMedia = mediaRepository.findAllMediaOfUser(user);
-		return listOfMedia;
+		return mediaRepository.findAllMediaOfUser(user);
 	}
 
 	@Override
 	public Optional<Media> findMediaById(String mediaId) {
-		Optional<Media> mediaOptional = mediaRepository.findById(mediaId);
-		return mediaOptional;
+		return mediaRepository.findById(mediaId);
 	}
 
 	@Override
 	public Media addMedia(Media media) {
-		Media savedMedia = mediaRepository.save(media);
-		return savedMedia;
+		return mediaRepository.save(media);
 	}
 
 	@Override
-	public void deleteMediaById(String MediaId) {
-		mediaRepository.deleteById(MediaId);
-		return;
+	public void deleteMediaById(String mediaId) {
+		mediaRepository.deleteById(mediaId);
 	}
 
 	@Override
 	public void deleteMedia(Media media) {
 		mediaRepository.delete(media);
-		return;
 	}
 
 }

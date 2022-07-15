@@ -129,16 +129,16 @@ public class MediaResponseDTO implements Serializable {
 				.forEach(t -> t.setCommentByUser(new PixelSenseUser(t.getCommentByUser().getUserName())));
 		this.mediaComments.stream().forEach(t -> {
 			Set<PixelSenseUser> commentLikedBy = new HashSet<>();
-			t.getCommentLikedBy().stream().forEach(u -> {
-				commentLikedBy.add(new PixelSenseUser(u.getUserName()));
-			});
+			t.getCommentLikedBy().stream().forEach(u -> 
+				commentLikedBy.add(new PixelSenseUser(u.getUserName()))
+			);
 			t.setCommentLikedBy(commentLikedBy);
 		});
 		this.mediaComments.stream().forEach(t -> {
 			Set<PixelSenseUser> commentLikedBy = new HashSet<>();
-			t.getCommentLikedBy().stream().forEach(u -> {
-				commentLikedBy.add(new PixelSenseUser(u.getUserName()));
-			});
+			t.getCommentLikedBy().stream().forEach(u -> 
+				commentLikedBy.add(new PixelSenseUser(u.getUserName()))
+			);
 			t.setCommentLikedBy(commentLikedBy);
 		});
 
@@ -148,16 +148,16 @@ public class MediaResponseDTO implements Serializable {
 					.forEach(t -> t.setCommentByUser(new PixelSenseUser(t.getCommentByUser().getUserName())));
 			mediaCommentSet.stream().forEach(t -> {
 				Set<PixelSenseUser> commentLikedBy = new HashSet<>();
-				t.getCommentLikedBy().stream().forEach(u -> {
-					commentLikedBy.add(new PixelSenseUser(u.getUserName()));
-				});
+				t.getCommentLikedBy().stream().forEach(u -> 
+					commentLikedBy.add(new PixelSenseUser(u.getUserName()))
+				);
 				t.setCommentLikedBy(commentLikedBy);
 			});
 			mediaCommentSet.stream().forEach(t -> {
 				Set<PixelSenseUser> commentLikedBy = new HashSet<>();
-				t.getCommentLikedBy().stream().forEach(u -> {
-					commentLikedBy.add(new PixelSenseUser(u.getUserName()));
-				});
+				t.getCommentLikedBy().stream().forEach(u -> 
+					commentLikedBy.add(new PixelSenseUser(u.getUserName()))
+				);
 				t.setCommentLikedBy(commentLikedBy);
 			});
 

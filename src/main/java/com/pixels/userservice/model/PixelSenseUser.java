@@ -59,9 +59,7 @@ public class PixelSenseUser implements Serializable {
 	private Set<PixelSenseUser> follower = new HashSet<>();
 
 	@ManyToMany
-	@JoinTable(name = "followers", 
-				joinColumns = @JoinColumn(name = "follows"), 
-				inverseJoinColumns = @JoinColumn(name = "userId"))
+	@JoinTable(name = "followers", joinColumns = @JoinColumn(name = "follows"), inverseJoinColumns = @JoinColumn(name = "userId"))
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<PixelSenseUser> following = new HashSet<>();
 
@@ -69,7 +67,6 @@ public class PixelSenseUser implements Serializable {
 	 * End of declaration of variables and beginning of standard getters/setters,
 	 * constructors, equals, hashcode and toString method
 	 */
-
 
 	public String getProfileBio() {
 		return profileBio;
@@ -84,14 +81,13 @@ public class PixelSenseUser implements Serializable {
 		this.username = username;
 		this.password = password;
 	}
-	
+
 	public String getUserName() {
 		return username;
 	}
 
 	public PixelSenseUser() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public PixelSenseUser(String username, String fullName, String firstName, String middleName, String lastName,
@@ -245,7 +241,7 @@ public class PixelSenseUser implements Serializable {
 		return mediaList;
 	}
 
-	public void setMediaList(HashSet<Media> mediaList) {
+	public void setMediaList(Set<Media> mediaList) {
 		this.mediaList = mediaList;
 	}
 
@@ -253,7 +249,7 @@ public class PixelSenseUser implements Serializable {
 		return likedMedia;
 	}
 
-	public void setLikedMedia(HashSet<Media> likedMedia) {
+	public void setLikedMedia(Set<Media> likedMedia) {
 		this.likedMedia = likedMedia;
 	}
 
@@ -261,7 +257,7 @@ public class PixelSenseUser implements Serializable {
 		return commentsOnMedia;
 	}
 
-	public void setCommentsOnMedia(HashSet<MediaComment> commentsOnMedia) {
+	public void setCommentsOnMedia(Set<MediaComment> commentsOnMedia) {
 		this.commentsOnMedia = commentsOnMedia;
 	}
 
@@ -269,7 +265,7 @@ public class PixelSenseUser implements Serializable {
 		return follower;
 	}
 
-	public void setFollower(HashSet<PixelSenseUser> follower) {
+	public void setFollower(Set<PixelSenseUser> follower) {
 		this.follower = follower;
 	}
 
@@ -289,11 +285,4 @@ public class PixelSenseUser implements Serializable {
 		this.countryCode = countryCode;
 	}
 
-//	public void refactorFollowerList() {
-//		HashSet<PixelsUser> updatedFollowerSet = new HashSet<>();
-//		this.follower.stream().forEach(t -> {
-//			updatedFollowerSet.add(new PixelsUser(t.getUserName()));
-//		});
-//		this.setFollower(updatedFollowerSet);
-//	}
 }

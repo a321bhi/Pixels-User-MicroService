@@ -47,7 +47,6 @@ public class Media {
 	}
 	public Media() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Media(Date createdAt, PixelSenseUser mediaPostedBy) {
@@ -56,7 +55,7 @@ public class Media {
 		this.mediaPostedBy = mediaPostedBy;
 	}
 
-	public Media(PixelSenseUser mediaPostedBy, HashSet<PixelSenseUser> likedBy, HashSet<MediaComment> mediaComments) {
+	public Media(PixelSenseUser mediaPostedBy, Set<PixelSenseUser> likedBy, Set<MediaComment> mediaComments) {
 		super();
 		this.mediaPostedBy = mediaPostedBy;
 		this.likedBy = likedBy;

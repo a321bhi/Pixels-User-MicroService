@@ -16,8 +16,8 @@ public class MediaCommentServiceImpl implements MediaCommentService {
 
 	@Override
 	public MediaComment addMediaComment(MediaComment mediaComment) {
-		MediaComment mediaCommentSaved = mediaCommentRepository.save(mediaComment);
-		return mediaCommentSaved;
+		return mediaCommentRepository.save(mediaComment);
+
 	}
 
 	@Override
@@ -28,13 +28,11 @@ public class MediaCommentServiceImpl implements MediaCommentService {
 	@Override
 	public void deleteMediaCommentById(String commentId) {
 		mediaCommentRepository.deleteById(commentId);
-		return;
 	}
 
 	@Override
 	public void deleteMediaComment(MediaComment mediaComment) {
 		mediaCommentRepository.delete(mediaComment);
-		return;
 	}
 
 }

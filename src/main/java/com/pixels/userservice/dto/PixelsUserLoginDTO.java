@@ -22,7 +22,6 @@ public class PixelsUserLoginDTO{
 	}
 	public PixelsUserLoginDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 }

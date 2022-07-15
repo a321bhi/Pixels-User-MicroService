@@ -11,6 +11,6 @@ public interface MediaService {
 	public Optional<Media> findMediaById(String mediaId);
 	public Media addMedia(Media media);
 	public void deleteMedia(Media media);
-	public void deleteMediaById(String MediaId);
+	public void deleteMediaById(String mediaId);
 	
 }

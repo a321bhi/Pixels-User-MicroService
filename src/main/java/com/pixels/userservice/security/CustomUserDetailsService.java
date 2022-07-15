@@ -18,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 
-		PixelSenseUser pixelSenseUser = (PixelSenseUser) userRepository.findForAuth(userName);
+		PixelSenseUser pixelSenseUser = userRepository.findForAuth(userName);
 		return new UserDetailsImplementation(pixelSenseUser);
 	}
 

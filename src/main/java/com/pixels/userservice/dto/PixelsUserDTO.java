@@ -30,13 +30,13 @@ public class PixelsUserDTO implements Serializable {
 	public void setFollower(PixelSenseUser user) {
 		Set<PixelSenseUser> followerObjectSet = user.getFollower();
 		Set<String> followerSet = new HashSet<>();
-		followerObjectSet.stream().forEach(t->{followerSet.add(t.getUserName());});
+		followerObjectSet.stream().forEach(t->followerSet.add(t.getUserName()));
 		this.setFollower(followerSet);
 	}
 	public void setFollowing(PixelSenseUser user) {
 		Set<PixelSenseUser> followingObjectSet = user.getFollowing();
 		Set<String> followingSet = new HashSet<>();
-		followingObjectSet.stream().forEach(t->{followingSet.add(t.getUserName());});
+		followingObjectSet.stream().forEach(t->followingSet.add(t.getUserName()));
 		this.setFollowing(followingSet);
 	}
 	public String getProfilePicAsBase64() {
@@ -66,18 +66,12 @@ public class PixelsUserDTO implements Serializable {
 
 	public PixelsUserDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public PixelsUserDTO(PixelSenseUser responseUser) {
 		this.username = responseUser.getUserName();
 		this.fullName = responseUser.getFullName();
-//		this.emailAddress = responseUser.getEmailAddress();
-//		this.phoneNumber = responseUser.getPhoneNumber();
 		this.dateOfBirth = responseUser.getDateOfBirth();
-//		this.gender = responseUser.getGender();
-//		this.dateOfJoining = responseUser.getDateOfJoining();
-//		this.privacyStatus = responseUser.getPrivacyStatus();
 		this.profileDescription = responseUser.getProfileBio();
 	}
 

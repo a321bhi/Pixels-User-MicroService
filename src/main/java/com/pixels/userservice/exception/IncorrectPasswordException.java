@@ -11,12 +11,10 @@ public class IncorrectPasswordException extends RuntimeException implements Seri
 
 	public IncorrectPasswordException() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public IncorrectPasswordException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 }
