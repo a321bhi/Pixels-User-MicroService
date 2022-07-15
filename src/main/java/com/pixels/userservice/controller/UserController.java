@@ -29,10 +29,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.pixels.userservice.dto.UserBioDTO;
-import com.pixels.userservice.dto.MediaForwardingDTO;
-import com.pixels.userservice.dto.PixelsUserLoginDTO;
+import com.pixels.userservice.dto.MediaRequestDTO;
 import com.pixels.userservice.dto.PixelsUserDTO;
+import com.pixels.userservice.dto.PixelsUserLoginDTO;
+import com.pixels.userservice.dto.UserBioDTO;
 import com.pixels.userservice.exception.UserSearchEmptyResult;
 import com.pixels.userservice.exception.UsernameNotFoundException;
 import com.pixels.userservice.jwt.JwtConfig;
@@ -83,7 +83,7 @@ public class UserController {
 		String username = loginFormModel.getUsername();
 		String password = loginFormModel.getPassword();
 		Optional<PixelSenseUser> user = userServiceImpl.findUserById(username);
-		if(!user.isPresent()) {
+		if (!user.isPresent()) {
 			throw new UsernameNotFoundException();
 		}
 		final Authentication authentication = authenticationManager
@@ -168,7 +168,7 @@ public class UserController {
 		userServiceImpl.addUser(user);
 		return new ResponseEntity<String>("profile updated", HttpStatus.OK);
 	}
-	
+
 	@PatchMapping("/password")
 	public ResponseEntity<String> updatePassword(@RequestBody PixelsUserLoginDTO loginFormModel) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -182,7 +182,7 @@ public class UserController {
 		userServiceImpl.addUser(user);
 		return new ResponseEntity<String>("profile updated", HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{queryUsername}")
 	public PixelsUserDTO getUser(@PathVariable String queryUsername) {
 //		String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -195,10 +195,9 @@ public class UserController {
 				.codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(-1)).build();
 		WebClient webClient = webClientBuilder.exchangeStrategies(strategies).baseUrl(baseUrl).build();
 
-		Mono<MediaForwardingDTO> profilePicResponse = webClient.get().uri("/service/media/"+responseUser.getProfilePicId())
-				.retrieve()
-				.bodyToMono(MediaForwardingDTO.class);
-		MediaForwardingDTO profilePic = (MediaForwardingDTO) profilePicResponse.block();
+		Mono<MediaRequestDTO> profilePicResponse = webClient.get()
+				.uri("/service/media/" + responseUser.getProfilePicId()).retrieve().bodyToMono(MediaRequestDTO.class);
+		MediaRequestDTO profilePic = (MediaRequestDTO) profilePicResponse.block();
 
 		PixelsUserDTO userResponsePayload = new PixelsUserDTO(responseUser);
 		userResponsePayload.setProfilePicAsBase64(profilePic.getImageAsBase64());

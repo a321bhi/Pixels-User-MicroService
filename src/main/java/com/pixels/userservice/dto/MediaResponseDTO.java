@@ -23,6 +23,18 @@ public class MediaResponseDTO implements Serializable {
 	private Set<String> likedBy = new HashSet<>();
 	private Set<MediaComment> mediaComments = new HashSet<>();
 
+
+	public MediaResponseDTO(MediaRequestDTO mediaRequestDTO) {
+		super();
+		this.mediaId = mediaRequestDTO.getMediaId();
+		this.mediaDate = mediaRequestDTO.getMediaDate();
+		this.mediaTags = mediaRequestDTO.getMediaTags();
+		this.mediaCaption = mediaRequestDTO.getMediaCaption();
+		this.imageAsBase64 = mediaRequestDTO.getImageAsBase64();
+	}
+	
+	
+	
 	public MediaResponseDTO(String mediaId, Date mediaDate, List<String> mediaTags, String mediaCaption,
 			String imageAsBase64) {
 		super();
@@ -33,14 +45,6 @@ public class MediaResponseDTO implements Serializable {
 		this.imageAsBase64 = imageAsBase64;
 	}
 
-	public MediaResponseDTO(MediaForwardingDTO forwardPayload) {
-		super();
-		this.mediaId = forwardPayload.getMediaId();
-		this.mediaDate = forwardPayload.getMediaDate();
-		this.mediaTags = forwardPayload.getMediaTags();
-		this.mediaCaption = forwardPayload.getMediaCaption();
-		this.imageAsBase64 = forwardPayload.getImageAsBase64();
-	}
 
 	@Override
 	public String toString() {

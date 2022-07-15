@@ -30,7 +30,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.pixels.userservice.dto.MediaForwardingDTO;
 import com.pixels.userservice.dto.MediaRequestDTO;
 import com.pixels.userservice.dto.MediaResponseDTO;
 import com.pixels.userservice.exception.CommentNotFound;
@@ -75,16 +74,16 @@ public class MediaController {
 
 		WebClient webClient = webClientBuilder.baseUrl(baseUrl).build();
 
-		MediaForwardingDTO forwardPayload = null;
+		MediaRequestDTO forwardPayload = null;
 		try {
-			forwardPayload = new MediaForwardingDTO(media.getMediaId(), media.getCreatedAt(), payload.getMediaTags(),
+			forwardPayload = new MediaRequestDTO(media.getMediaId(), media.getCreatedAt(), payload.getMediaTags(),
 					payload.getMediaCaption(), Base64.getEncoder().encodeToString(payload.getImage().getBytes()));
 		} catch (IOException e) {
 			System.out.print("ERROR in base64 conv");
 		}
 
 		Mono<String> response = webClient.post().uri("/service/media")
-				.body(Mono.just(forwardPayload), MediaForwardingDTO.class).exchangeToMono(res -> {
+				.body(Mono.just(forwardPayload), MediaRequestDTO.class).exchangeToMono(res -> {
 					if (res.statusCode().equals(HttpStatus.OK)) {
 						return res.bodyToMono(String.class);
 					} else if (res.statusCode().is4xxClientError()) {
@@ -99,7 +98,7 @@ public class MediaController {
 	}
 
 	@PatchMapping("/media-caption")
-	public ResponseEntity<String> updateMediaDetails(@RequestBody MediaForwardingDTO forwardPayload) {
+	public ResponseEntity<String> updateMediaDetails(@RequestBody MediaRequestDTO forwardPayload) {
 //		System.out.println(forwardPayload.toString());
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<Media> optionalMediaEntity = mediaServiceImpl.findMediaById(forwardPayload.getMediaId());
@@ -115,7 +114,7 @@ public class MediaController {
 		WebClient webClient = webClientBuilder.baseUrl(baseUrl).build();
 
 		Mono<String> response = webClient.patch().uri("/service/media-caption")
-				.body(Mono.just(forwardPayload), MediaForwardingDTO.class).exchangeToMono(res -> {
+				.body(Mono.just(forwardPayload), MediaRequestDTO.class).exchangeToMono(res -> {
 					if (res.statusCode().equals(HttpStatus.OK)) {
 						return res.bodyToMono(String.class);
 					} else if (res.statusCode().is4xxClientError()) {
@@ -181,16 +180,16 @@ public class MediaController {
 				.codecs(codecs -> codecs.defaultCodecs().maxInMemorySize(-1)).build();
 		WebClient webClient = webClientBuilder.exchangeStrategies(strategies).baseUrl(baseUrl).build();
 
-		Mono<List<MediaForwardingDTO>> response = webClient.post().uri("/service/getAllMedia")
+		Mono<List<MediaRequestDTO>> response = webClient.post().uri("/service/getAllMedia")
 				.body(Mono.just(mediaIdQueryList), new ParameterizedTypeReference<List<String>>() {
-				}).retrieve().bodyToMono(new ParameterizedTypeReference<List<MediaForwardingDTO>>() {
+				}).retrieve().bodyToMono(new ParameterizedTypeReference<List<MediaRequestDTO>>() {
 				});
-		List<MediaForwardingDTO> listOfForwardPayload = (List<MediaForwardingDTO>) response.block();
+		List<MediaRequestDTO> listOfForwardPayload = (List<MediaRequestDTO>) response.block();
 
 		MediaResponseDTO temporaryResponsePayload;
 		Optional<Media> tempOptMedia;
 		Media tempMedia;
-		for (MediaForwardingDTO tempPayload : listOfForwardPayload) {
+		for (MediaRequestDTO tempPayload : listOfForwardPayload) {
 			Set<String> usersWhoLikedThisMedia = new HashSet<>();
 			temporaryResponsePayload = new MediaResponseDTO(tempPayload);
 			tempOptMedia = mediaServiceImpl.findMediaById(temporaryResponsePayload.getMediaId());
@@ -334,16 +333,16 @@ public class MediaController {
 		Date profilePicUpdateDate = new Date();
 		WebClient webClient = webClientBuilder.baseUrl(baseUrl).build();
 
-		MediaForwardingDTO forwardPayload = null;
+		MediaRequestDTO forwardPayload = null;
 		try {
-			forwardPayload = new MediaForwardingDTO(mediaId, profilePicUpdateDate, payload.getMediaTags(),
+			forwardPayload = new MediaRequestDTO(mediaId, profilePicUpdateDate, payload.getMediaTags(),
 					payload.getMediaCaption(), Base64.getEncoder().encodeToString(payload.getImage().getBytes()));
 		} catch (IOException e) {
 			System.out.print("ERROR in base64 conv");
 		}
 
 		Mono<String> response = webClient.post().uri("/service/media")
-				.body(Mono.just(forwardPayload), MediaForwardingDTO.class).exchangeToMono(res -> {
+				.body(Mono.just(forwardPayload), MediaRequestDTO.class).exchangeToMono(res -> {
 					if (res.statusCode().equals(HttpStatus.OK)) {
 						return res.bodyToMono(String.class);
 					} else if (res.statusCode().is4xxClientError()) {
