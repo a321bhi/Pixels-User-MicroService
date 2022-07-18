@@ -72,8 +72,13 @@ public class UserController {
 				.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);
+		int numOfDays = 1;
+		long nowMillis = System.currentTimeMillis();
+		long expMillis = nowMillis + (86400*1000*numOfDays);
+		Date exp = new Date(expMillis);
+		
 		String token = Jwts.builder().setSubject(username).claim("authorities", "USER").setIssuedAt(new Date())
-				.setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(1)))
+				.setExpiration(exp)
 				.signWith(jwtConfig.getSecretKeySigned()).compact();
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set(jwtConfig.getAuthorizationheader(), "Bearer " + token);

@@ -23,8 +23,8 @@ pipeline {
     stage('Deploy') {
       steps {
         bat 'docker build -t pixels-userservice .'
-        bat 'docker tag pixels-userservice abhi2104/pixels-userservice'
-        bat 'docker push abhi2104/pixels-userservice'
+        bat 'docker tag pixels-userservice abhi2104/pixels-userservice:latest'
+        bat 'docker push abhi2104/pixels-userservice:latest'
       }
     }
 
@@ -36,7 +36,7 @@ pipeline {
 
       }
       steps {
-        sh 'docker pull abhi2104/pixels-userservice'
+        sh 'docker pull abhi2104/pixels-userservice:latest'
       }
     }
 
