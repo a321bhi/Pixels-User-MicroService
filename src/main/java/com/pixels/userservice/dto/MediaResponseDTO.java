@@ -22,7 +22,16 @@ public class MediaResponseDTO implements Serializable {
 	private String imageAsBase64;
 	private Set<String> likedBy = new HashSet<>();
 	private Set<MediaComment> mediaComments = new HashSet<>();
+	private String usernamePostedBy;
+	public String getUsernamePostedBy() {
+		return usernamePostedBy;
+	}
 
+
+
+	public void setUsernamePostedBy(String usernamePostedBy) {
+		this.usernamePostedBy = usernamePostedBy;
+	}
 
 	public MediaResponseDTO(MediaRequestDTO mediaRequestDTO) {
 		super();
@@ -127,6 +136,7 @@ public class MediaResponseDTO implements Serializable {
 	public void refactorMediaComments() {
 		this.mediaComments.stream()
 				.forEach(t -> t.setCommentByUser(new PixelSenseUser(t.getCommentByUser().getUserName())));
+		
 		this.mediaComments.stream().forEach(t -> {
 			Set<PixelSenseUser> commentLikedBy = new HashSet<>();
 			t.getCommentLikedBy().stream().forEach(u -> 

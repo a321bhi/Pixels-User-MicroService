@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -29,19 +30,19 @@ public class MediaComment {
 	private String commentContent;
 
 	private Date createdAt = new Date();
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "userId")
 	private PixelSenseUser commentByUser;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "mediaId")
 	private Media commentOnMediaId;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "commentLikedBy", joinColumns = @JoinColumn(name = "commendId"), inverseJoinColumns = @JoinColumn(name = "userId"))
 	private Set<PixelSenseUser> commentLikedBy = new HashSet<>();
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "COMMENT_ON_COMMENTID")
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private MediaComment commentOnCommentId;

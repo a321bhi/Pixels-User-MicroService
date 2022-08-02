@@ -1,7 +1,7 @@
 package com.pixels.userservice.controller;
 
-import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -74,12 +74,11 @@ public class UserController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		int numOfDays = 1;
 		long nowMillis = System.currentTimeMillis();
-		long expMillis = nowMillis + (86400*1000*numOfDays);
+		long expMillis = nowMillis + (86400 * 1000 * numOfDays);
 		Date exp = new Date(expMillis);
-		
+
 		String token = Jwts.builder().setSubject(username).claim("authorities", "USER").setIssuedAt(new Date())
-				.setExpiration(exp)
-				.signWith(jwtConfig.getSecretKeySigned()).compact();
+				.setExpiration(exp).signWith(jwtConfig.getSecretKeySigned()).compact();
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set(jwtConfig.getAuthorizationheader(), "Bearer " + token);
 		responseHeaders.set("Access-Control-Expose-Headers", jwtConfig.getAuthorizationheader());
@@ -221,5 +220,11 @@ public class UserController {
 		requestingUser.setFollowing(followingSet);
 		userServiceImpl.addUser(requestingUser);
 		return new ResponseEntity<>("unfollow success", HttpStatus.OK);
+	}
+
+	@GetMapping("/search/{queryString}")
+	public List<String> searchUser(@PathVariable String queryString) {
+		List<String> userSearchResult = userServiceImpl.getUsernameBasedOnSearch(queryString);
+		return userSearchResult;
 	}
 }

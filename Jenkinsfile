@@ -20,7 +20,7 @@ pipeline {
       }
     }
 
-    stage('Deploy') {
+    stage('Push image to Container Repo') {
       steps {
         bat 'docker build -t pixels-userservice .'
         bat 'docker tag pixels-userservice abhi2104/pixels-userservice:latest'
@@ -28,7 +28,7 @@ pipeline {
       }
     }
 
-    stage('') {
+    stage('Deploy') {
       agent {
         node {
           label 'jenkinsagent'

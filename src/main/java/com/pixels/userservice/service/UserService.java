@@ -15,5 +15,5 @@ public interface UserService {
 	public void deleteUserById(String username);
 
 	public void updateUser(String username, PixelSenseUser user);
-
+	public List<String> getUsernameBasedOnSearch(String username);
 }

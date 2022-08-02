@@ -14,10 +14,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.pixels.userservice.jwt.JwtConfig;
 import com.pixels.userservice.jwt.JwtTokenVerifier;
-import com.pixels.userservice.jwt.JwtUsernameAndPasswordAuthenticatorFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -46,8 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.authenticationEntryPoint(authenticationEntryPoint).and().authorizeRequests()
 				.antMatchers("/user/login", "/user/register", "/user/check/*").permitAll().antMatchers("*")
 				.hasAnyAuthority("USER", "User", "*").anyRequest().authenticated().and()
-				.addFilter(new JwtUsernameAndPasswordAuthenticatorFilter(authenticationManager()))
-				.addFilterAfter(new JwtTokenVerifier(jwtConfig), JwtUsernameAndPasswordAuthenticatorFilter.class);
+				.addFilterAfter(new JwtTokenVerifier(jwtConfig), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Override

@@ -96,7 +96,7 @@ public class MediaController {
 					}
 				});
 		response.block();
-		return new ResponseEntity<>("UCResponse - data has been added", HttpStatus.OK);
+		return new ResponseEntity<>("data has been added", HttpStatus.OK);
 
 	}
 
@@ -430,5 +430,54 @@ public class MediaController {
 			mediaCommentServiceImpl.addMediaComment(mediaComment);
 		}
 		return new ResponseEntity<>("like removed media", HttpStatus.OK);
+	}
+
+	@GetMapping("/all-mappings")
+	public List<MediaResponseDTO> getMappingsForListOfMedia(@PathVariable String[] listOfMediaId) {
+		List<MediaResponseDTO> listOfResponsePayload = new ArrayList<>();
+		MediaResponseDTO temporaryResponsePayload;
+		Optional<Media> tempOptMedia;
+		Media tempMedia;
+		for (String currentMediaId : listOfMediaId) {
+			Set<String> usersWhoLikedThisMedia = new HashSet<>();
+			temporaryResponsePayload = new MediaResponseDTO();
+			tempOptMedia = mediaServiceImpl.findMediaById(currentMediaId);
+			if (tempOptMedia.isEmpty()) {
+				continue;
+			}
+			tempMedia = tempOptMedia.get();
+			for (PixelSenseUser tempUser : tempMedia.getLikedBy()) {
+				usersWhoLikedThisMedia.add(tempUser.getUserName());
+			}
+			temporaryResponsePayload.setLikedBy(usersWhoLikedThisMedia);
+			temporaryResponsePayload.setMediaComments(tempMedia.getMediaComments());
+			temporaryResponsePayload.refactorMediaComments();
+			listOfResponsePayload.add(temporaryResponsePayload);
+		}
+
+		return listOfResponsePayload;
+	}
+
+	@GetMapping("/mappings/{queryMediaId}")
+	public MediaResponseDTO getMappingsOfMedia(@PathVariable String queryMediaId) {
+		MediaResponseDTO responsePayload = new MediaResponseDTO();
+		Optional<Media> tempOptMedia;
+		Media tempMedia;
+		Set<String> usersWhoLikedThisMedia = new HashSet<>();
+		tempOptMedia = mediaServiceImpl.findMediaById(queryMediaId);
+		if (tempOptMedia.isEmpty()) {
+			throw new PostNotFoundException();
+		}
+		tempMedia = tempOptMedia.get();
+		for (PixelSenseUser tempUser : tempMedia.getLikedBy()) {
+			usersWhoLikedThisMedia.add(tempUser.getUserName());
+		}
+		responsePayload.setLikedBy(usersWhoLikedThisMedia);
+		responsePayload.setMediaComments(tempMedia.getMediaComments());
+		responsePayload.setUsernamePostedBy(tempMedia.getMediaPostedBy().getUserName());
+		responsePayload.refactorMediaComments();
+
+		return responsePayload;
+
 	}
 }
