@@ -35,6 +35,7 @@ pipeline {
         }
 
       }
+      options { skipDefaultCheckout() }
       steps {
         sh 'docker pull abhi2104/pixels-userservice:latest'
       }

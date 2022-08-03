@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -178,14 +179,16 @@ public class UserController {
 				.uri("/service/media/" + responseUser.getProfilePicId()).retrieve().bodyToMono(MediaRequestDTO.class);
 		profilePic = profilePicResponse.block();
 
-		PixelsUserDTO userResponsePayload = new PixelsUserDTO(responseUser);
-		userResponsePayload.setProfilePicAsBase64(profilePic.getImageAsBase64());
-		userResponsePayload.setEmailAddress(responseUser.getEmailAddress());
-		userResponsePayload.setCountryCode(responseUser.getCountryCode());
-		userResponsePayload.setPhoneNumber(responseUser.getPhoneNumber());
-		userResponsePayload.setFollower(responseUser);
-		userResponsePayload.setFollowing(responseUser);
-		return userResponsePayload;
+		ModelMapper modelMapper = new ModelMapper();
+//		PixelsUserDTO userResponsePayload = new PixelsUserDTO(responseUser);
+//		userResponsePayload.setProfilePicAsBase64(profilePic.getImageAsBase64());
+//		userResponsePayload.setEmailAddress(responseUser.getEmailAddress());
+//		userResponsePayload.setCountryCode(responseUser.getCountryCode());
+//		userResponsePayload.setPhoneNumber(responseUser.getPhoneNumber());
+//		userResponsePayload.setFollower(responseUser);
+//		userResponsePayload.setFollowing(responseUser);
+//		return userResponsePayload;
+		return modelMapper.map(responseUser,PixelsUserDTO.class);
 	}
 
 	@PostMapping("/follow")

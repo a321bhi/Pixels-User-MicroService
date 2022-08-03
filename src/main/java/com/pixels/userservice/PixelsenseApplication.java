@@ -14,17 +14,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.pixels.userservice.model.Authority;
 
-
 @SpringBootApplication
 @EnableEurekaClient
 public class PixelsenseApplication {
-	
+
 	@Bean
 	@LoadBalanced
 	public WebClient.Builder loadBalancedWebClientBuilder() {
-	   return WebClient.builder();
+		return WebClient.builder();
 	}
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(PixelsenseApplication.class, args);
 	}
