@@ -23,22 +23,9 @@ public class PixelsUserDTO implements Serializable {
 	private Date dateOfJoining;
 	private Boolean privacyStatus;
 	private String profilePicAsBase64;
-	private String profileDescription;
+	private String profileBio;
 	private Set<String> follower = new HashSet<>();
 	private Set<String> following = new HashSet<>();
-	
-	public void setFollower(PixelSenseUser user) {
-		Set<PixelSenseUser> followerObjectSet = user.getFollower();
-		Set<String> followerSet = new HashSet<>();
-		followerObjectSet.stream().forEach(t->followerSet.add(t.getUserName()));
-		this.setFollower(followerSet);
-	}
-	public void setFollowing(PixelSenseUser user) {
-		Set<PixelSenseUser> followingObjectSet = user.getFollowing();
-		Set<String> followingSet = new HashSet<>();
-		followingObjectSet.stream().forEach(t->followingSet.add(t.getUserName()));
-		this.setFollowing(followingSet);
-	}
 	public String getProfilePicAsBase64() {
 		return profilePicAsBase64;
 	}
@@ -60,19 +47,12 @@ public class PixelsUserDTO implements Serializable {
 		this.dateOfJoining = dateOfJoining;
 		this.privacyStatus = privacyStatus;
 		this.profilePicAsBase64 = profilePicAsBase64;
-		this.profileDescription = profileDescription;
+		this.profileBio = profileDescription;
 	}
 
 
 	public PixelsUserDTO() {
 		super();
-	}
-
-	public PixelsUserDTO(PixelSenseUser responseUser) {
-		this.username = responseUser.getUserName();
-		this.fullName = responseUser.getFullName();
-		this.dateOfBirth = responseUser.getDateOfBirth();
-		this.profileDescription = responseUser.getProfileBio();
 	}
 
 	@Override
@@ -156,14 +136,12 @@ public class PixelsUserDTO implements Serializable {
 		this.privacyStatus = privacyStatus;
 	}
 
-	public String getProfileDescription() {
-		return profileDescription;
+	public String getProfileBio() {
+		return profileBio;
 	}
-
-	public void setProfileDescription(String profileDescription) {
-		this.profileDescription = profileDescription;
+	public void setProfileBio(String profileBio) {
+		this.profileBio = profileBio;
 	}
-
 	public Set<String> getFollower() {
 		return follower;
 	}
@@ -185,5 +163,10 @@ public class PixelsUserDTO implements Serializable {
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
 	}
-
+	public PixelsUserDTO(PixelSenseUser responseUser) {
+		this.username = responseUser.getUserName();
+		this.fullName = responseUser.getFullName();
+		this.dateOfBirth = responseUser.getDateOfBirth();
+		this.profileBio = responseUser.getProfileBio();
+	}
 }

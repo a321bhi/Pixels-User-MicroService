@@ -16,48 +16,44 @@ public class MediaResponseDTO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String mediaId;
-	private Date mediaDate;
+	private Date createdAt;
 	private List<String> mediaTags = new ArrayList<>();
 	private String mediaCaption;
 	private String imageAsBase64;
 	private Set<String> likedBy = new HashSet<>();
-	private Set<MediaComment> mediaComments = new HashSet<>();
-	private String usernamePostedBy;
-	public String getUsernamePostedBy() {
-		return usernamePostedBy;
+	private Set<MediaCommentDTO> mediaComments = new HashSet<>();
+	private String mediaPostedBy;
+
+	public String getMediaPostedBy() {
+		return mediaPostedBy;
 	}
 
-
-
-	public void setUsernamePostedBy(String usernamePostedBy) {
-		this.usernamePostedBy = usernamePostedBy;
+	public void setMediaPostedBy(String mediaPostedBy) {
+		this.mediaPostedBy = mediaPostedBy;
 	}
 
 	public MediaResponseDTO(MediaRequestDTO mediaRequestDTO) {
 		super();
 		this.mediaId = mediaRequestDTO.getMediaId();
-		this.mediaDate = mediaRequestDTO.getMediaDate();
+		this.createdAt = mediaRequestDTO.getMediaDate();
 		this.mediaTags = mediaRequestDTO.getMediaTags();
 		this.mediaCaption = mediaRequestDTO.getMediaCaption();
 		this.imageAsBase64 = mediaRequestDTO.getImageAsBase64();
 	}
-	
-	
-	
+
 	public MediaResponseDTO(String mediaId, Date mediaDate, List<String> mediaTags, String mediaCaption,
 			String imageAsBase64) {
 		super();
 		this.mediaId = mediaId;
-		this.mediaDate = mediaDate;
+		this.createdAt = mediaDate;
 		this.mediaTags = mediaTags;
 		this.mediaCaption = mediaCaption;
 		this.imageAsBase64 = imageAsBase64;
 	}
 
-
 	@Override
 	public String toString() {
-		return "ResponsePayload [mediaId=" + mediaId + ", mediaDate=" + mediaDate + ", mediaTags=" + mediaTags
+		return "ResponsePayload [mediaId=" + mediaId + ", mediaDate=" + createdAt + ", mediaTags=" + mediaTags
 				+ ", mediaCaption=" + mediaCaption + ", likedBy=" + likedBy + ", mediaComments=" + mediaComments + "]";
 	}
 
@@ -69,25 +65,25 @@ public class MediaResponseDTO implements Serializable {
 		this.likedBy = likedBy;
 	}
 
-	public Set<MediaComment> getMediaComments() {
+	public Set<MediaCommentDTO> getMediaComments() {
 		return mediaComments;
 	}
 
-	public void setMediaComments(Set<MediaComment> mediaComments) {
+	public void setMediaComments(Set<MediaCommentDTO> mediaComments) {
 		this.mediaComments = mediaComments;
 	}
 
-	public MediaResponseDTO(String mediaId, Date mediaDate, List<String> mediaTags, String mediaCaption,
-			String imageAsBase64, Set<String> likedBy, Set<MediaComment> mediaComments) {
-		super();
-		this.mediaId = mediaId;
-		this.mediaDate = mediaDate;
-		this.mediaTags = mediaTags;
-		this.mediaCaption = mediaCaption;
-		this.imageAsBase64 = imageAsBase64;
-		this.likedBy = likedBy;
-		this.mediaComments = mediaComments;
-	}
+//	public MediaResponseDTO(String mediaId, Date mediaDate, List<String> mediaTags, String mediaCaption,
+//			String imageAsBase64, Set<String> likedBy, Set<MediaComment> mediaComments) {
+//		super();
+//		this.mediaId = mediaId;
+//		this.createdAt = mediaDate;
+//		this.mediaTags = mediaTags;
+//		this.mediaCaption = mediaCaption;
+//		this.imageAsBase64 = imageAsBase64;
+//		this.likedBy = likedBy;
+//		this.mediaComments = mediaComments;
+//	}
 
 	public MediaResponseDTO() {
 		super();
@@ -101,12 +97,12 @@ public class MediaResponseDTO implements Serializable {
 		this.mediaId = mediaId;
 	}
 
-	public Date getMediaDate() {
-		return mediaDate;
+	public Date getCreatedAt() {
+		return createdAt;
 	}
 
-	public void setMediaDate(Date mediaDate) {
-		this.mediaDate = mediaDate;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public List<String> getMediaTags() {
@@ -132,47 +128,4 @@ public class MediaResponseDTO implements Serializable {
 	public void setImageAsBase64(String imageAsBase64) {
 		this.imageAsBase64 = imageAsBase64;
 	}
-
-	public void refactorMediaComments() {
-		this.mediaComments.stream()
-				.forEach(t -> t.setCommentByUser(new PixelSenseUser(t.getCommentByUser().getUserName())));
-		
-		this.mediaComments.stream().forEach(t -> {
-			Set<PixelSenseUser> commentLikedBy = new HashSet<>();
-			t.getCommentLikedBy().stream().forEach(u -> 
-				commentLikedBy.add(new PixelSenseUser(u.getUserName()))
-			);
-			t.setCommentLikedBy(commentLikedBy);
-		});
-		this.mediaComments.stream().forEach(t -> {
-			Set<PixelSenseUser> commentLikedBy = new HashSet<>();
-			t.getCommentLikedBy().stream().forEach(u -> 
-				commentLikedBy.add(new PixelSenseUser(u.getUserName()))
-			);
-			t.setCommentLikedBy(commentLikedBy);
-		});
-
-		this.mediaComments.stream().forEach(mediaComment -> {
-			Set<MediaComment> mediaCommentSet = mediaComment.getCommentsOnComment();
-			mediaCommentSet.stream()
-					.forEach(t -> t.setCommentByUser(new PixelSenseUser(t.getCommentByUser().getUserName())));
-			mediaCommentSet.stream().forEach(t -> {
-				Set<PixelSenseUser> commentLikedBy = new HashSet<>();
-				t.getCommentLikedBy().stream().forEach(u -> 
-					commentLikedBy.add(new PixelSenseUser(u.getUserName()))
-				);
-				t.setCommentLikedBy(commentLikedBy);
-			});
-			mediaCommentSet.stream().forEach(t -> {
-				Set<PixelSenseUser> commentLikedBy = new HashSet<>();
-				t.getCommentLikedBy().stream().forEach(u -> 
-					commentLikedBy.add(new PixelSenseUser(u.getUserName()))
-				);
-				t.setCommentLikedBy(commentLikedBy);
-			});
-
-		});
-
-	}
-
 }

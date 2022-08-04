@@ -39,7 +39,7 @@ public class MediaComment {
 	private Media commentOnMediaId;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "commentLikedBy", joinColumns = @JoinColumn(name = "commendId"), inverseJoinColumns = @JoinColumn(name = "userId"))
+	@JoinTable(name = "commentLikedBy", joinColumns = @JoinColumn(name = "commentId"), inverseJoinColumns = @JoinColumn(name = "userId"))
 	private Set<PixelSenseUser> commentLikedBy = new HashSet<>();
 
 	@ManyToOne(fetch = FetchType.EAGER)

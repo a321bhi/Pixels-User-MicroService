@@ -180,15 +180,11 @@ public class UserController {
 		profilePic = profilePicResponse.block();
 
 		ModelMapper modelMapper = new ModelMapper();
-//		PixelsUserDTO userResponsePayload = new PixelsUserDTO(responseUser);
-//		userResponsePayload.setProfilePicAsBase64(profilePic.getImageAsBase64());
-//		userResponsePayload.setEmailAddress(responseUser.getEmailAddress());
-//		userResponsePayload.setCountryCode(responseUser.getCountryCode());
-//		userResponsePayload.setPhoneNumber(responseUser.getPhoneNumber());
-//		userResponsePayload.setFollower(responseUser);
-//		userResponsePayload.setFollowing(responseUser);
-//		return userResponsePayload;
-		return modelMapper.map(responseUser,PixelsUserDTO.class);
+		modelMapper.createTypeMap(PixelSenseUser.class, String.class)
+				.setConverter(context -> context.getSource().getUserName());
+		PixelsUserDTO userResponsePayload = modelMapper.map(responseUser, PixelsUserDTO.class);
+		userResponsePayload.setProfilePicAsBase64(profilePic.getImageAsBase64());
+		return userResponsePayload;
 	}
 
 	@PostMapping("/follow")

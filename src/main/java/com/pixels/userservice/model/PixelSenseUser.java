@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -54,11 +55,11 @@ public class PixelSenseUser implements Serializable {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<MediaComment> commentsOnMedia = new HashSet<>();
 
-	@ManyToMany(mappedBy = "following")
+	@ManyToMany(mappedBy = "following",fetch = FetchType.EAGER)
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<PixelSenseUser> follower = new HashSet<>();
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "followers", joinColumns = @JoinColumn(name = "follows"), inverseJoinColumns = @JoinColumn(name = "userId"))
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private Set<PixelSenseUser> following = new HashSet<>();

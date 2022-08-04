@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -12,6 +11,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
@@ -191,20 +192,23 @@ public class MediaController {
 		MediaResponseDTO temporaryResponsePayload;
 		Optional<Media> tempOptMedia;
 		Media tempMedia;
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+		modelMapper.createTypeMap(PixelSenseUser.class, String.class)
+				.setConverter(context -> context.getSource().getUserName());
+
+		modelMapper.createTypeMap(MediaComment.class, String.class)
+				.setConverter(context -> context.getSource().getCommentId());
 		for (MediaRequestDTO tempPayload : listOfForwardPayload) {
-			Set<String> usersWhoLikedThisMedia = new HashSet<>();
-			temporaryResponsePayload = new MediaResponseDTO(tempPayload);
-			tempOptMedia = mediaServiceImpl.findMediaById(temporaryResponsePayload.getMediaId());
+			tempOptMedia = mediaServiceImpl.findMediaById(tempPayload.getMediaId());
 			if (tempOptMedia.isEmpty()) {
 				continue;
 			}
 			tempMedia = tempOptMedia.get();
-			for (PixelSenseUser tempUser : tempMedia.getLikedBy()) {
-				usersWhoLikedThisMedia.add(tempUser.getUserName());
-			}
-			temporaryResponsePayload.setLikedBy(usersWhoLikedThisMedia);
-			temporaryResponsePayload.setMediaComments(tempMedia.getMediaComments());
-			temporaryResponsePayload.refactorMediaComments();
+			temporaryResponsePayload = modelMapper.map(tempMedia, MediaResponseDTO.class);
+			temporaryResponsePayload.setMediaTags(tempPayload.getMediaTags());
+			temporaryResponsePayload.setMediaCaption(tempPayload.getMediaCaption());
+			temporaryResponsePayload.setImageAsBase64(tempPayload.getImageAsBase64());
 			listOfResponsePayload.add(temporaryResponsePayload);
 		}
 
@@ -438,20 +442,23 @@ public class MediaController {
 		MediaResponseDTO temporaryResponsePayload;
 		Optional<Media> tempOptMedia;
 		Media tempMedia;
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE).setDeepCopyEnabled(true)
+				.setFieldMatchingEnabled(true);
+		modelMapper.createTypeMap(PixelSenseUser.class, String.class)
+				.setConverter(context -> context.getSource().getUserName());
+
+		modelMapper.createTypeMap(MediaComment.class, String.class)
+				.setConverter(context -> context.getSource().getCommentId());
+
 		for (String currentMediaId : listOfMediaId) {
-			Set<String> usersWhoLikedThisMedia = new HashSet<>();
 			temporaryResponsePayload = new MediaResponseDTO();
 			tempOptMedia = mediaServiceImpl.findMediaById(currentMediaId);
 			if (tempOptMedia.isEmpty()) {
 				continue;
 			}
 			tempMedia = tempOptMedia.get();
-			for (PixelSenseUser tempUser : tempMedia.getLikedBy()) {
-				usersWhoLikedThisMedia.add(tempUser.getUserName());
-			}
-			temporaryResponsePayload.setLikedBy(usersWhoLikedThisMedia);
-			temporaryResponsePayload.setMediaComments(tempMedia.getMediaComments());
-			temporaryResponsePayload.refactorMediaComments();
+			temporaryResponsePayload = modelMapper.map(tempMedia, MediaResponseDTO.class);
 			listOfResponsePayload.add(temporaryResponsePayload);
 		}
 
@@ -463,20 +470,19 @@ public class MediaController {
 		MediaResponseDTO responsePayload = new MediaResponseDTO();
 		Optional<Media> tempOptMedia;
 		Media tempMedia;
-		Set<String> usersWhoLikedThisMedia = new HashSet<>();
 		tempOptMedia = mediaServiceImpl.findMediaById(queryMediaId);
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+		modelMapper.createTypeMap(PixelSenseUser.class, String.class)
+				.setConverter(context -> context.getSource().getUserName());
+
+		modelMapper.createTypeMap(MediaComment.class, String.class)
+				.setConverter(context -> context.getSource().getCommentId());
 		if (tempOptMedia.isEmpty()) {
 			throw new PostNotFoundException();
 		}
 		tempMedia = tempOptMedia.get();
-		for (PixelSenseUser tempUser : tempMedia.getLikedBy()) {
-			usersWhoLikedThisMedia.add(tempUser.getUserName());
-		}
-		responsePayload.setLikedBy(usersWhoLikedThisMedia);
-		responsePayload.setMediaComments(tempMedia.getMediaComments());
-		responsePayload.setUsernamePostedBy(tempMedia.getMediaPostedBy().getUserName());
-		responsePayload.refactorMediaComments();
-
+		responsePayload = modelMapper.map(tempMedia, MediaResponseDTO.class);
 		return responsePayload;
 
 	}
