@@ -23,7 +23,7 @@ public class PixelSenseUser implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	String username;
+	private String username;
 	private String fullName;
 	private String firstName;
 	private String middleName;
@@ -83,7 +83,7 @@ public class PixelSenseUser implements Serializable {
 		this.password = password;
 	}
 
-	public String getUserName() {
+	public String getUsername() {
 		return username;
 	}
 

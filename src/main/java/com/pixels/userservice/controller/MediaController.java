@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,7 +54,8 @@ public class MediaController {
 
 	@Autowired
 	private WebClient.Builder webClientBuilder;
-	private String baseUrl = "http://mediaservice";
+	@Value("${application.microservice.media}")
+	private String baseUrl;
 
 	@Autowired
 	MediaServiceImpl mediaServiceImpl;
@@ -77,6 +79,12 @@ public class MediaController {
 
 		WebClient webClient = webClientBuilder.baseUrl(baseUrl).build();
 
+		try {
+			System.out.println(payload.getImage().getInputStream());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		MediaRequestDTO forwardPayload = null;
 		try {
 			forwardPayload = new MediaRequestDTO(media.getMediaId(), media.getCreatedAt(), payload.getMediaTags(),
@@ -111,7 +119,7 @@ public class MediaController {
 		} else {
 			mediaToBeUpdated = optionalMediaEntity.get();
 		}
-		if (!mediaToBeUpdated.getMediaPostedBy().getUserName().equals(username)) {
+		if (!mediaToBeUpdated.getMediaPostedBy().getUsername().equals(username)) {
 			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
 		}
 		WebClient webClient = webClientBuilder.baseUrl(baseUrl).build();
@@ -141,7 +149,7 @@ public class MediaController {
 		} else {
 			mediaToBeDeleted = optionalMediaEntity.get();
 		}
-		if (!mediaToBeDeleted.getMediaPostedBy().getUserName().equals(username)) {
+		if (!mediaToBeDeleted.getMediaPostedBy().getUsername().equals(username)) {
 			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
 		}
 
@@ -195,7 +203,7 @@ public class MediaController {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 		modelMapper.createTypeMap(PixelSenseUser.class, String.class)
-				.setConverter(context -> context.getSource().getUserName());
+				.setConverter(context -> context.getSource().getUsername());
 
 		modelMapper.createTypeMap(MediaComment.class, String.class)
 				.setConverter(context -> context.getSource().getCommentId());
@@ -303,7 +311,7 @@ public class MediaController {
 			throw new CommentNotFound();
 		}
 		MediaComment mediaComment = optionalOutput.get();
-		if (!username.equals(mediaComment.getCommentByUser().getUserName())) {
+		if (!username.equals(mediaComment.getCommentByUser().getUsername())) {
 			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
 		}
 		mediaCommentServiceImpl.deleteMediaComment(mediaComment);
@@ -319,7 +327,7 @@ public class MediaController {
 			throw new CommentNotFound();
 		}
 		MediaComment mediaComment = commentOpt.get();
-		if (!username.equals(mediaComment.getCommentByUser().getUserName())) {
+		if (!username.equals(mediaComment.getCommentByUser().getUsername())) {
 			throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED);
 		}
 		mediaCommentServiceImpl.deleteMediaComment(mediaComment);
@@ -433,7 +441,7 @@ public class MediaController {
 			mediaComment.setCommentLikedBy(likedByList);
 			mediaCommentServiceImpl.addMediaComment(mediaComment);
 		}
-		return new ResponseEntity<>("like removed media", HttpStatus.OK);
+		return new ResponseEntity<>("comment liked removed", HttpStatus.OK);
 	}
 
 	@GetMapping("/all-mappings")
@@ -446,7 +454,7 @@ public class MediaController {
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE).setDeepCopyEnabled(true)
 				.setFieldMatchingEnabled(true);
 		modelMapper.createTypeMap(PixelSenseUser.class, String.class)
-				.setConverter(context -> context.getSource().getUserName());
+				.setConverter(context -> context.getSource().getUsername());
 
 		modelMapper.createTypeMap(MediaComment.class, String.class)
 				.setConverter(context -> context.getSource().getCommentId());
@@ -474,7 +482,7 @@ public class MediaController {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
 		modelMapper.createTypeMap(PixelSenseUser.class, String.class)
-				.setConverter(context -> context.getSource().getUserName());
+				.setConverter(context -> context.getSource().getUsername());
 
 		modelMapper.createTypeMap(MediaComment.class, String.class)
 				.setConverter(context -> context.getSource().getCommentId());

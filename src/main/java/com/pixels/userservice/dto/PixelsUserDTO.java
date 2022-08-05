@@ -26,6 +26,7 @@ public class PixelsUserDTO implements Serializable {
 	private String profileBio;
 	private Set<String> follower = new HashSet<>();
 	private Set<String> following = new HashSet<>();
+
 	public String getProfilePicAsBase64() {
 		return profilePicAsBase64;
 	}
@@ -34,8 +35,8 @@ public class PixelsUserDTO implements Serializable {
 		this.profilePicAsBase64 = profilePicAsBase64;
 	}
 
-	public PixelsUserDTO(String username, String fullName, String emailAddress, String phoneNumber,
-			Date dateOfBirth, String gender, Date dateOfJoining, Boolean privacyStatus, String profilePicAsBase64,
+	public PixelsUserDTO(String username, String fullName, String emailAddress, String phoneNumber, Date dateOfBirth,
+			String gender, Date dateOfJoining, Boolean privacyStatus, String profilePicAsBase64,
 			String profileDescription) {
 		super();
 		this.username = username;
@@ -49,7 +50,6 @@ public class PixelsUserDTO implements Serializable {
 		this.profilePicAsBase64 = profilePicAsBase64;
 		this.profileBio = profileDescription;
 	}
-
 
 	public PixelsUserDTO() {
 		super();
@@ -139,9 +139,11 @@ public class PixelsUserDTO implements Serializable {
 	public String getProfileBio() {
 		return profileBio;
 	}
+
 	public void setProfileBio(String profileBio) {
 		this.profileBio = profileBio;
 	}
+
 	public Set<String> getFollower() {
 		return follower;
 	}
@@ -157,14 +159,17 @@ public class PixelsUserDTO implements Serializable {
 	public void setFollowing(Set<String> following) {
 		this.following = following;
 	}
+
 	public String getCountryCode() {
 		return countryCode;
 	}
+
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
 	}
+
 	public PixelsUserDTO(PixelSenseUser responseUser) {
-		this.username = responseUser.getUserName();
+		this.username = responseUser.getUsername();
 		this.fullName = responseUser.getFullName();
 		this.dateOfBirth = responseUser.getDateOfBirth();
 		this.profileBio = responseUser.getProfileBio();

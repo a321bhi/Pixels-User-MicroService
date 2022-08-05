@@ -35,7 +35,7 @@ public class UserDetailsImplementation implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return pixelsUser.getUserName();
+		return pixelsUser.getUsername();
 	}
 
 	@Override

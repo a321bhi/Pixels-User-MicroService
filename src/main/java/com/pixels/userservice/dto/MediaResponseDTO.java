@@ -7,9 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.pixels.userservice.model.MediaComment;
-import com.pixels.userservice.model.PixelSenseUser;
-
 public class MediaResponseDTO implements Serializable {
 	/**
 	 * 

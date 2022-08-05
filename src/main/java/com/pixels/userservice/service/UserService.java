@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.pixels.userservice.model.PixelSenseUser;
 
 public interface UserService {
-	public void addUser(PixelSenseUser user);
+	public PixelSenseUser addUser(PixelSenseUser user);
 
 	public List<PixelSenseUser> findAllUsers();
 

@@ -16,8 +16,8 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 
 	@Override
-	public void addUser(PixelSenseUser user) {
-		userRepository.save(user);
+	public PixelSenseUser addUser(PixelSenseUser user) {
+		return userRepository.save(user);
 	}
 
 	@Override

@@ -111,13 +111,13 @@ public class UserController {
 			user.setLastName(arrayOfName[numPartOfName - 1]);
 		}
 		userServiceImpl.addUser(user);
-		return new ResponseEntity<>(user.getFirstName() + " data has been added", HttpStatus.OK);
+		return new ResponseEntity<>(user.getUsername() + " has registered!", HttpStatus.OK);
 	}
 
-	@DeleteMapping("/{userName}")
-	public ResponseEntity<String> deleteUser(@PathVariable String userName) {
-		userServiceImpl.deleteUserById(userName);
-		return new ResponseEntity<>(userName + " removed successfully", HttpStatus.OK);
+	@DeleteMapping("/{username}")
+	public ResponseEntity<String> deleteUser(@PathVariable String username) {
+		userServiceImpl.deleteUserById(username);
+		return new ResponseEntity<>(username + " removed successfully", HttpStatus.OK);
 	}
 
 	@PatchMapping("/bio")
@@ -181,7 +181,7 @@ public class UserController {
 
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.createTypeMap(PixelSenseUser.class, String.class)
-				.setConverter(context -> context.getSource().getUserName());
+				.setConverter(context -> context.getSource().getUsername());
 		PixelsUserDTO userResponsePayload = modelMapper.map(responseUser, PixelsUserDTO.class);
 		userResponsePayload.setProfilePicAsBase64(profilePic.getImageAsBase64());
 		return userResponsePayload;

@@ -23,15 +23,15 @@ public class MediaCommentDTO {
 
 	public MediaCommentDTO(MediaComment mediaComment) {
 		ModelMapper modelMapper = new ModelMapper();
-		modelMapper.createTypeMap(PixelSenseUser.class, String.class).setConverter(context->context.getSource().getUserName());
+		modelMapper.createTypeMap(PixelSenseUser.class, String.class).setConverter(context->context.getSource().getUsername());
 		modelMapper.createTypeMap(Media.class, String.class).setConverter(context->context.getSource().getMediaId());
 		modelMapper.createTypeMap(MediaComment.class, String.class).setConverter(context->context.getSource().getCommentId());
 		this.commentId = mediaComment.getCommentId();
 		this.commentContent = mediaComment.getCommentContent();
 		this.createdAt = mediaComment.getCreatedAt();
-		this.commentByUser = mediaComment.getCommentByUser().getUserName();
+		this.commentByUser = mediaComment.getCommentByUser().getUsername();
 		this.commentOnMediaId = mediaComment.getCommentOnMediaId().getMediaId();
-		this.commentLikedBy = mediaComment.getCommentLikedBy().stream().map(row->row.getUserName()).collect(Collectors.toSet());
+		this.commentLikedBy = mediaComment.getCommentLikedBy().stream().map(row->row.getUsername()).collect(Collectors.toSet());
 		this.commentsOnComment = mediaComment.getCommentsOnComment().stream().map(row->
 		modelMapper.map(row, MediaCommentDTO.class)).collect(Collectors.toSet());
 	}
