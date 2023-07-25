@@ -31,7 +31,7 @@ public class MediaCommentDTO {
 		this.createdAt = mediaComment.getCreatedAt();
 		this.commentByUser = mediaComment.getCommentByUser().getUsername();
 		this.commentOnMediaId = mediaComment.getCommentOnMediaId().getMediaId();
-		this.commentLikedBy = mediaComment.getCommentLikedBy().stream().map(row->row.getUsername()).collect(Collectors.toSet());
+		this.commentLikedBy = mediaComment.getCommentLikedBy().stream().map(PixelSenseUser::getUsername).collect(Collectors.toSet());
 		this.commentsOnComment = mediaComment.getCommentsOnComment().stream().map(row->
 		modelMapper.map(row, MediaCommentDTO.class)).collect(Collectors.toSet());
 	}

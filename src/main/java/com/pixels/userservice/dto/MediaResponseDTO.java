@@ -32,7 +32,7 @@ public class MediaResponseDTO implements Serializable {
 	public MediaResponseDTO(MediaRequestDTO mediaRequestDTO) {
 		super();
 		this.mediaId = mediaRequestDTO.getMediaId();
-		this.createdAt = mediaRequestDTO.getMediaDate();
+		this.createdAt = mediaRequestDTO.getCreatedAt();
 		this.mediaTags = mediaRequestDTO.getMediaTags();
 		this.mediaCaption = mediaRequestDTO.getMediaCaption();
 		this.imageAsBase64 = mediaRequestDTO.getImageAsBase64();
@@ -69,18 +69,6 @@ public class MediaResponseDTO implements Serializable {
 	public void setMediaComments(Set<MediaCommentDTO> mediaComments) {
 		this.mediaComments = mediaComments;
 	}
-
-//	public MediaResponseDTO(String mediaId, Date mediaDate, List<String> mediaTags, String mediaCaption,
-//			String imageAsBase64, Set<String> likedBy, Set<MediaComment> mediaComments) {
-//		super();
-//		this.mediaId = mediaId;
-//		this.createdAt = mediaDate;
-//		this.mediaTags = mediaTags;
-//		this.mediaCaption = mediaCaption;
-//		this.imageAsBase64 = imageAsBase64;
-//		this.likedBy = likedBy;
-//		this.mediaComments = mediaComments;
-//	}
 
 	public MediaResponseDTO() {
 		super();

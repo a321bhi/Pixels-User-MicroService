@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.pixels.userservice.dto.MediaRequestDTO;
 import com.pixels.userservice.dto.PixelsUserDTO;
 import com.pixels.userservice.dto.PixelsUserLoginDTO;
+import com.pixels.userservice.dto.PixelsUserRegistrationDTO;
 import com.pixels.userservice.dto.UserBioDTO;
 import com.pixels.userservice.exception.UsernameNotFoundException;
 import com.pixels.userservice.jwt.JwtConfig;
@@ -87,9 +90,8 @@ public class UserController {
 		return ResponseEntity.ok().headers(responseHeaders).body("Logged in");
 	}
 
-	// REST End point local
 	@PostMapping("/register")
-	public ResponseEntity<String> addUser(@RequestBody PixelSenseUser user) {
+	public ResponseEntity<String> addUser(@RequestBody PixelsUserRegistrationDTO user) {
 		// Encoding Password
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(10);
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -110,7 +112,10 @@ public class UserController {
 		} else {
 			user.setLastName(arrayOfName[numPartOfName - 1]);
 		}
-		userServiceImpl.addUser(user);
+		PixelSenseUser pixelSenseUser = new PixelSenseUser();
+		ModelMapper modelMapper = new ModelMapper();
+		pixelSenseUser = modelMapper.map(user,PixelSenseUser.class);
+		userServiceImpl.addUser(pixelSenseUser);
 		return new ResponseEntity<>(user.getUsername() + " has registered!", HttpStatus.OK);
 	}
 
@@ -134,7 +139,7 @@ public class UserController {
 	}
 
 	@PatchMapping("/profile")
-	public ResponseEntity<String> updateProfile(@RequestBody PixelSenseUser updatedUser) {
+	public ResponseEntity<String> updateProfile(@RequestBody PixelsUserDTO updatedUser) {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<PixelSenseUser> optionalUser = userServiceImpl.findUserById(username);
 		if (optionalUser.isEmpty()) {
@@ -183,7 +188,13 @@ public class UserController {
 		modelMapper.createTypeMap(PixelSenseUser.class, String.class)
 				.setConverter(context -> context.getSource().getUsername());
 		PixelsUserDTO userResponsePayload = modelMapper.map(responseUser, PixelsUserDTO.class);
-		userResponsePayload.setProfilePicAsBase64(profilePic.getImageAsBase64());
+		if(profilePic!=null && profilePic.getImageAsBase64()!=null) {
+			userResponsePayload.setProfilePicAsBase64(profilePic.getImageAsBase64());
+		}else{
+			Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+			LOGGER.log(Level.SEVERE, "Error in retrieving profile pic");
+		}
+		
 		return userResponsePayload;
 	}
 
@@ -223,7 +234,6 @@ public class UserController {
 
 	@GetMapping("/search/{queryString}")
 	public List<String> searchUser(@PathVariable String queryString) {
-		List<String> userSearchResult = userServiceImpl.getUsernameBasedOnSearch(queryString);
-		return userSearchResult;
+		return userServiceImpl.getUsernameBasedOnSearch(queryString);
 	}
 }

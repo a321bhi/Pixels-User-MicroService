@@ -56,7 +56,9 @@ public class MediaController {
 	private WebClient.Builder webClientBuilder;
 	@Value("${application.microservice.media}")
 	private String baseUrl;
-
+	private String uriPath="/service/media";
+	private String errorResponse = "Error response from Media microservice";
+	private String defaultProfilePicId = "4028818481adc7080181ae0195620001";
 	@Autowired
 	MediaServiceImpl mediaServiceImpl;
 
@@ -74,32 +76,26 @@ public class MediaController {
 			throw new UsernameNotFoundException();
 		}
 		PixelSenseUser user = optionalUser.get();
-		Media media = new Media(new Date(), user);
+		Media media = new Media();
+		media.setMediaPostedBy(user);
 		media = mediaServiceImpl.addMedia(media);
 
 		WebClient webClient = webClientBuilder.baseUrl(baseUrl).build();
-
-		try {
-			System.out.println(payload.getImage().getInputStream());
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		MediaRequestDTO forwardPayload = null;
 		try {
 			forwardPayload = new MediaRequestDTO(media.getMediaId(), media.getCreatedAt(), payload.getMediaTags(),
 					payload.getMediaCaption(), Base64.getEncoder().encodeToString(payload.getImage().getBytes()));
 		} catch (IOException e) {
-			Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-			LOGGER.log(Level.SEVERE, "Error in base64 conversion");
+			Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+			logger.log(Level.SEVERE, "Error in base64 conversion");
 		}
 
-		Mono<String> response = webClient.post().uri("/service/media")
+		Mono<String> response = webClient.post().uri(uriPath)
 				.body(Mono.just(forwardPayload), MediaRequestDTO.class).exchangeToMono(res -> {
 					if (res.statusCode().equals(HttpStatus.OK)) {
 						return res.bodyToMono(String.class);
 					} else if (res.statusCode().is4xxClientError()) {
-						return Mono.just("Error response");
+						return Mono.just(errorResponse);
 					} else {
 						return res.createException().flatMap(Mono::error);
 					}
@@ -129,7 +125,7 @@ public class MediaController {
 					if (res.statusCode().equals(HttpStatus.OK)) {
 						return res.bodyToMono(String.class);
 					} else if (res.statusCode().is4xxClientError()) {
-						return Mono.just("Error response");
+						return Mono.just(errorResponse);
 					} else {
 						return res.createException().flatMap(Mono::error);
 					}
@@ -162,7 +158,7 @@ public class MediaController {
 			if (res.statusCode().equals(HttpStatus.OK)) {
 				return res.bodyToMono(String.class);
 			} else if (res.statusCode().is4xxClientError()) {
-				return Mono.just("Error response");
+				return Mono.just(errorResponse);
 			} else {
 				return res.createException().flatMap(Mono::error);
 			}
@@ -180,10 +176,8 @@ public class MediaController {
 		}
 		List<MediaResponseDTO> listOfResponsePayload = new ArrayList<>();
 		PixelSenseUser user = optionalUser.get();
-		if (!usernameRequestedBy.equals(username)) {
-			if (user.getPrivacyStatus()) {
+		if (!usernameRequestedBy.equals(username) || user.getPrivacyStatus() ) {
 				return listOfResponsePayload;
-			}
 		}
 		List<String> mediaIdQueryList = mediaServiceImpl.getAllMediaOfOneUser(user);
 
@@ -351,16 +345,16 @@ public class MediaController {
 			forwardPayload = new MediaRequestDTO(mediaId, profilePicUpdateDate, payload.getMediaTags(),
 					payload.getMediaCaption(), Base64.getEncoder().encodeToString(payload.getImage().getBytes()));
 		} catch (IOException e) {
-			Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-			LOGGER.log(Level.SEVERE, "Error in base64 conversion");
+			Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+			logger.log(Level.SEVERE, "Error in base64 conversion");
 		}
 
-		Mono<String> response = webClient.post().uri("/service/media")
+		Mono<String> response = webClient.post().uri(uriPath)
 				.body(Mono.just(forwardPayload), MediaRequestDTO.class).exchangeToMono(res -> {
 					if (res.statusCode().equals(HttpStatus.OK)) {
 						return res.bodyToMono(String.class);
 					} else if (res.statusCode().is4xxClientError()) {
-						return Mono.just("Error response");
+						return Mono.just(errorResponse);
 					} else {
 						return res.createException().flatMap(Mono::error);
 					}
@@ -379,24 +373,24 @@ public class MediaController {
 			throw new UsernameNotFoundException();
 		}
 		PixelSenseUser user = userOpt.get();
-		if (user.getProfilePicId().equals("4028818481adc7080181ae0195620001")) {
-			return new ResponseEntity<String>("profile pic deleted!", HttpStatus.OK);
+		if (user.getProfilePicId().equals(defaultProfilePicId)) {
+			return new ResponseEntity<>("profile pic deleted!", HttpStatus.OK);
 		}
 
 		WebClient webClient = webClientBuilder.baseUrl(baseUrl).build();
 
-		Mono<String> response = webClient.delete().uri("/service/media" + user.getProfilePicId())
+		Mono<String> response = webClient.delete().uri(uriPath + user.getProfilePicId())
 				.exchangeToMono(res -> {
 					if (res.statusCode().equals(HttpStatus.OK)) {
 						return res.bodyToMono(String.class);
 					} else if (res.statusCode().is4xxClientError()) {
-						return Mono.just("Error response");
+						return Mono.just(errorResponse);
 					} else {
 						return res.createException().flatMap(Mono::error);
 					}
 				});
 		response.block();
-		user.setProfilePicId("4028818481adc7080181ae0195620001");
+		user.setProfilePicId(defaultProfilePicId);
 		userServiceImpl.addUser(user);
 		return new ResponseEntity<>("profile pic deleted!", HttpStatus.OK);
 	}
@@ -460,7 +454,6 @@ public class MediaController {
 				.setConverter(context -> context.getSource().getCommentId());
 
 		for (String currentMediaId : listOfMediaId) {
-			temporaryResponsePayload = new MediaResponseDTO();
 			tempOptMedia = mediaServiceImpl.findMediaById(currentMediaId);
 			if (tempOptMedia.isEmpty()) {
 				continue;
@@ -475,7 +468,7 @@ public class MediaController {
 
 	@GetMapping("/mappings/{queryMediaId}")
 	public MediaResponseDTO getMappingsOfMedia(@PathVariable String queryMediaId) {
-		MediaResponseDTO responsePayload = new MediaResponseDTO();
+		MediaResponseDTO responsePayload;
 		Optional<Media> tempOptMedia;
 		Media tempMedia;
 		tempOptMedia = mediaServiceImpl.findMediaById(queryMediaId);

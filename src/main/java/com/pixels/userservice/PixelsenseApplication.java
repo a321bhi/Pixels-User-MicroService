@@ -33,8 +33,6 @@ public class PixelsenseApplication {
 
 		List<Authority> authorityList = new ArrayList<>();
 		authorityList.add(createAuthority("USER", "User role"));
-		// authorityList.add(createAuthority("ADMIN","Admin role"));
-
 	}
 
 	private Authority createAuthority(String roleCode, String roleDescription) {

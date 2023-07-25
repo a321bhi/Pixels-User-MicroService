@@ -49,12 +49,6 @@ public class Media {
 		super();
 	}
 
-	public Media(Date createdAt, PixelSenseUser mediaPostedBy) {
-		super();
-		this.createdAt = createdAt;
-		this.mediaPostedBy = mediaPostedBy;
-	}
-
 	public Media(PixelSenseUser mediaPostedBy, Set<PixelSenseUser> likedBy, Set<MediaComment> mediaComments) {
 		super();
 		this.mediaPostedBy = mediaPostedBy;
